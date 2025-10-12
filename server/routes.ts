@@ -9,8 +9,11 @@ import { generateScenario } from "./services/scenario-service";
 import { generatePDF } from "./services/pdf-service";
 import type { ManualInput } from "@shared/schema";
 
-// pdf-parse is a CommonJS module, need dynamic import
-const pdfParseModule = import("pdf-parse");
+// pdf-parse is a CommonJS module that needs to be imported at runtime
+async function getPdfParse() {
+  const module = await import("pdf-parse");
+  return module.default || module;
+}
 
 const upload = multer({
   storage: multer.memoryStorage(),
