@@ -6,10 +6,10 @@ Dudilig is an AI-powered compliance analysis platform that transforms startup pi
 **Tagline:** From Deck to Deal Terms — with Citations
 
 ## Current State
-**Version:** 1.2 (Demo Day Edition)
-**Status:** Fully functional MVP with all core features implemented and tested
+**Version:** 1.3 (Strategy Edition)
+**Status:** Fully functional MVP with compliance analysis + strategy simulator
 **Last Updated:** October 12, 2025
-**Test Status:** ✅ End-to-end tested and verified
+**Test Status:** ✅ End-to-end tested and verified (including simulator)
 
 ## Key Features
 
@@ -41,6 +41,15 @@ Dudilig is an AI-powered compliance analysis platform that transforms startup pi
 - **Professional Formatting:** Branded layout with metrics, gaps, and scenarios
 - **Download Ready:** Instant PDF generation for investment committee memos
 
+### 6. Strategy Simulator
+- **Interactive Modeling:** Explore 4 compliance approaches (Standard, AI-Optimized, Minimal, Full Verification)
+- **Market Analysis:** Model impacts across 5 regulatory jurisdictions (US, EU, UK, Singapore, Japan)
+- **Real-Time Metrics:** 7 key metrics update dynamically (conversion, complexity, risk, cost, timeline, friction, compliance score)
+- **Visual Analytics:** Interactive charts (funnel conversion, risk/conversion trade-off)
+- **Strategic Guidance:** Context-specific recommendations for Engineering, Compliance, and Product teams
+- **Impact Planning:** Cross-functional analysis table with effort, timeline, and dependencies
+- **Integrated Experience:** Seamless navigation from compliance analysis to strategy modeling
+
 ## Architecture
 
 ### Frontend Stack
@@ -50,6 +59,7 @@ Dudilig is an AI-powered compliance analysis platform that transforms startup pi
 - **UI Components:** Shadcn UI with Tailwind CSS
 - **Forms:** React Hook Form with Zod validation
 - **Icons:** Lucide React
+- **Visualizations:** Recharts for interactive data charts
 
 ### Backend Stack
 - **Runtime:** Node.js 20 with Express
@@ -66,6 +76,7 @@ Dudilig is an AI-powered compliance analysis platform that transforms startup pi
 
 ## User Journey
 
+### Compliance Analysis Flow
 1. **Upload:** User drops pitch deck PDF, pastes URL, or fills manual form
 2. **Extract:** AI extracts company data (or uses manual input)
 3. **Classify:** Deterministic rules assign EU AI Act tier with citations
@@ -74,6 +85,16 @@ Dudilig is an AI-powered compliance analysis platform that transforms startup pi
 6. **Export:** User downloads 1-page PDF brief for IC review
 
 **Target Time:** < 3 minutes from upload to export
+
+### Strategy Simulator Flow
+1. **Navigate:** Click "Strategy Simulator" from analysis results or header nav
+2. **Select Approach:** Choose compliance implementation strategy (Standard, AI-Optimized, Minimal, Full)
+3. **Select Market:** Choose target regulatory jurisdiction (US, EU, UK, Singapore, Japan)
+4. **Review Metrics:** See real-time updates to conversion, cost, risk, timeline, and compliance scores
+5. **Analyze Impact:** Review strategic recommendations and cross-functional team impact
+6. **Compare:** Use charts to visualize trade-offs between approaches
+
+**Value Prop:** Transforms compliance from blocker to strategic decision with quantified trade-offs
 
 ## Project Structure
 
@@ -90,6 +111,8 @@ Dudilig is an AI-powered compliance analysis platform that transforms startup pi
       LoadingAnalysis.tsx
     /pages            # Route pages
       Home.tsx
+      Analysis.tsx
+      Simulator.tsx
     /lib              # Utilities
     index.css         # Global styles
   index.html          # Entry point
@@ -104,6 +127,7 @@ Dudilig is an AI-powered compliance analysis platform that transforms startup pi
     gap-analysis-service.ts
     scenario-service.ts
     pdf-service.ts
+    simulator-service.ts
   routes.ts           # API endpoints
   storage.ts          # In-memory data store
 
@@ -135,6 +159,11 @@ Retrieve analysis results
 ### GET /api/analysis/:id/pdf
 Download PDF brief
 - **Output:** PDF file (application/pdf)
+
+### GET /api/simulator
+Get simulator state with calculated metrics
+- **Query Params:** `approach` (standard|ai-optimized|minimal|full-verification), `market` (us|eu|uk|singapore|japan)
+- **Output:** SimulatorState schema with metrics, recommendations, impact analysis, and chart data
 
 ## Key Design Decisions
 
