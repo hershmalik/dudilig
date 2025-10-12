@@ -9,12 +9,6 @@ import { generateScenario } from "./services/scenario-service";
 import { generatePDF } from "./services/pdf-service";
 import type { ManualInput } from "@shared/schema";
 
-// pdf-parse is a CommonJS module that needs to be imported at runtime
-async function getPdfParse() {
-  const module = await import("pdf-parse");
-  return module.default || module;
-}
-
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
@@ -37,35 +31,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "No file uploaded" });
       }
 
-      const pdfParse = (await pdfParseModule).default;
-      const pdfData = await pdfParse(req.file.buffer);
-      const extractedText = pdfData.text;
-
-      if (!extractedText || extractedText.trim().length < 50) {
-        return res.status(400).json({ 
-          message: "Could not extract sufficient text from PDF. Please try manual input." 
-        });
-      }
-
-      const companyData = await extractCompanyDataFromText(extractedText);
+      // pdf-parse v2 uses class-based API
+      const { PDFParse } = await import("pdf-parse");
+      const parser = new PDFParse({ data: req.file.buffer });
       
-      const classification = classifyAISystem(companyData.aiUseCase);
-      const gaps = analyzeComplianceGaps(classification.tier);
-      const scenario = generateScenario(classification.tier, companyData.sector);
+      try {
+        const pdfData = await parser.getText();
+        const extractedText = pdfData.text;
 
-      const analysis = await storage.createAnalysis({
-        companyName: companyData.companyName,
-        sector: companyData.sector,
-        geography: companyData.geography,
-        aiUseCase: companyData.aiUseCase,
-        tier: classification.tier,
-        tierReason: classification.reason,
-        citations: classification.citations,
-        gaps,
-        scenario,
-      });
+        if (!extractedText || extractedText.trim().length < 50) {
+          return res.status(400).json({ 
+            message: "Could not extract sufficient text from PDF. Please try manual input." 
+          });
+        }
 
-      res.json({ analysisId: analysis.id });
+        const companyData = await extractCompanyDataFromText(extractedText);
+        
+        const classification = classifyAISystem(companyData.aiUseCase);
+        const gaps = analyzeComplianceGaps(classification.tier);
+        const scenario = generateScenario(classification.tier, companyData.sector);
+
+        const analysis = await storage.createAnalysis({
+          companyName: companyData.companyName,
+          sector: companyData.sector,
+          geography: companyData.geography,
+          aiUseCase: companyData.aiUseCase,
+          tier: classification.tier,
+          tierReason: classification.reason,
+          citations: classification.citations,
+          gaps,
+          scenario,
+        });
+
+        res.json({ analysisId: analysis.id });
+      } finally {
+        // Always clean up PDF parser resources
+        await parser.destroy();
+      }
     } catch (error) {
       console.error("Upload analysis error:", error);
       res.status(500).json({ 
