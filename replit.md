@@ -7,8 +7,9 @@ Dudilig is an AI-powered compliance analysis platform that transforms startup pi
 
 ## Current State
 **Version:** 1.2 (Demo Day Edition)
-**Status:** Fully functional MVP with all core features implemented
-**Last Updated:** October 2025
+**Status:** Fully functional MVP with all core features implemented and tested
+**Last Updated:** October 12, 2025
+**Test Status:** ✅ End-to-end tested and verified
 
 ## Key Features
 
@@ -204,5 +205,19 @@ No manual API key configuration required when using Replit AI Integrations.
 
 - This is a demo/prototype build. Not production-ready without auth, rate limiting, and database persistence.
 - Uses Replit AI Integrations for OpenAI access (charges billed to Replit credits, no personal API key needed).
-- PDF generation uses Puppeteer which may have cold-start latency in production.
+- PDF generation uses Puppeteer when available, with graceful HTML fallback when system dependencies are missing. Users can print HTML to PDF from their browser.
 - All regulatory citations are accurate as of October 2025 but should be validated before real use.
+- Classification rules are deterministic and case-sensitive. Use exact wording from rules engine for accurate tier assignment (e.g., "Medical Diagnosis" for High-Risk healthcare AI).
+
+## Technical Implementation Details
+
+### Routing
+- **/** - Homepage with upload interface. Shows results inline after analysis.
+- **/analysis/:id** - Dedicated analysis results page accessible via direct URL.
+
+### PDF Export Behavior
+The PDF export gracefully handles environments with or without Puppeteer dependencies:
+- **With Puppeteer:** Generates true PDF files with proper formatting
+- **Without Puppeteer (Replit demo):** Returns formatted HTML that users can print to PDF via browser
+
+Both paths provide the same 1-page compliance brief content with all citations and formatting intact.

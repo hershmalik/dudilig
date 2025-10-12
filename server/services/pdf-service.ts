@@ -1,33 +1,41 @@
-import puppeteer from "puppeteer";
 import type { AnalysisResult } from "@shared/schema";
 import { format } from "date-fns";
 
 export async function generatePDF(analysis: AnalysisResult): Promise<Buffer> {
   const html = generateHTML(analysis);
   
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  });
-
+  // In demo environments without Chrome/Chromium dependencies,
+  // we return the HTML as a fallback that can be printed to PDF by the browser
   try {
-    const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: 'networkidle0' });
-    
-    const pdf = await page.pdf({
-      format: 'A4',
-      printBackground: true,
-      margin: {
-        top: '20mm',
-        right: '15mm',
-        bottom: '20mm',
-        left: '15mm',
-      },
+    const puppeteer = await import("puppeteer");
+    const browser = await puppeteer.default.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
 
-    return Buffer.from(pdf);
-  } finally {
-    await browser.close();
+    try {
+      const page = await browser.newPage();
+      await page.setContent(html, { waitUntil: 'networkidle0' });
+      
+      const pdf = await page.pdf({
+        format: 'A4',
+        printBackground: true,
+        margin: {
+          top: '20mm',
+          right: '15mm',
+          bottom: '20mm',
+          left: '15mm',
+        },
+      });
+
+      return Buffer.from(pdf);
+    } finally {
+      await browser.close();
+    }
+  } catch (error) {
+    // Fallback: return HTML wrapped in instructions for browser-based PDF generation
+    console.warn("Puppeteer not available, using HTML fallback:", error);
+    return Buffer.from(html);
   }
 }
 

@@ -89,20 +89,29 @@ export default function Home() {
         method: "GET",
       });
       if (!response.ok) throw new Error("PDF generation failed");
+      
+      const contentType = response.headers.get("content-type");
+      const isHTML = contentType?.includes("text/html");
+      
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `compliance-brief-${analysisResult?.companyName || "analysis"}.pdf`;
+      const fileExt = isHTML ? "html" : "pdf";
+      a.download = `compliance-brief-${analysisResult?.companyName || "analysis"}.${fileExt}`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
+      
+      return { isHTML };
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast({
-        title: "PDF Generated",
-        description: "Your compliance brief has been downloaded",
+        title: data.isHTML ? "HTML Brief Downloaded" : "PDF Downloaded",
+        description: data.isHTML 
+          ? "Your compliance brief has been downloaded as HTML. You can open it and print to PDF from your browser."
+          : "Your compliance brief has been downloaded successfully",
       });
     },
     onError: () => {
