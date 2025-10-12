@@ -166,14 +166,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Analysis not found" });
       }
 
-      const pdfBuffer = await generatePDF(analysis);
+      const buffer = await generatePDF(analysis);
+      
+      // Check if buffer starts with PDF signature (%PDF) or HTML (<!DOCTYPE or <html)
+      const bufferStart = buffer.toString('utf-8', 0, 10);
+      const isPDF = bufferStart.startsWith('%PDF');
 
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader(
-        "Content-Disposition",
-        `attachment; filename=compliance-brief-${analysis.companyName.replace(/\s+/g, '-')}.pdf`
-      );
-      res.send(pdfBuffer);
+      if (isPDF) {
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader(
+          "Content-Disposition",
+          `attachment; filename=compliance-brief-${analysis.companyName.replace(/\s+/g, '-')}.pdf`
+        );
+      } else {
+        // HTML fallback - user can print to PDF from browser
+        res.setHeader("Content-Type", "text/html");
+        res.setHeader(
+          "Content-Disposition",
+          `inline; filename=compliance-brief-${analysis.companyName.replace(/\s+/g, '-')}.html`
+        );
+      }
+      
+      res.send(buffer);
     } catch (error) {
       console.error("PDF generation error:", error);
       res.status(500).json({ message: "Failed to generate PDF" });
