@@ -1,5 +1,6 @@
-import { Download, Calendar } from "lucide-react";
+import { Download, Calendar, ExternalLink, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { ClassificationDisplay } from "./ClassificationDisplay";
 import { ComplianceGapCard } from "./ComplianceGapCard";
 import { ScenarioPanel } from "./ScenarioPanel";
@@ -63,6 +64,40 @@ export function AnalysisResults({ result, onExportPDF, isExporting }: AnalysisRe
         </h2>
         <ScenarioPanel scenario={result.scenario} />
       </div>
+
+      <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-2">
+                <TrendingUp className="w-5 h-5 text-primary" />
+                <h3 className="text-lg font-semibold text-foreground">
+                  Model Implementation Strategies
+                </h3>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Explore different compliance approaches with interactive cost/conversion/timeline trade-offs
+              </p>
+            </div>
+            <Button
+              asChild
+              variant="default"
+              size="lg"
+              className="gap-2 shrink-0"
+              data-testid="button-compliance-simulator"
+            >
+              <a
+                href="https://compliance-simulator.onrender.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open Simulator
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 rounded-lg p-4">
         <p className="text-xs text-amber-900 dark:text-amber-200 font-medium">
