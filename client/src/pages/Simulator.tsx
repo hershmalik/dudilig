@@ -38,6 +38,13 @@ export default function Simulator() {
 
   const { data: state, isLoading } = useQuery<SimulatorState>({
     queryKey: ["/api/simulator", approach, market],
+    queryFn: async () => {
+      const response = await fetch(`/api/simulator?approach=${approach}&market=${market}`);
+      if (!response.ok) {
+        throw new Error("Failed to load simulator state");
+      }
+      return response.json();
+    },
   });
 
   if (isLoading || !state) {
