@@ -7,6 +7,7 @@ import { classifyAISystem } from "./services/classification-service";
 import { analyzeComplianceGaps } from "./services/gap-analysis-service";
 import { generateScenario } from "./services/scenario-service";
 import { generatePDF } from "./services/pdf-service";
+import { getSimulatorState } from "./services/simulator-service";
 import type { ManualInput } from "@shared/schema";
 
 const upload = multer({
@@ -196,6 +197,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("PDF generation error:", error);
       res.status(500).json({ message: "Failed to generate PDF" });
+    }
+  });
+
+  app.get("/api/simulator", async (req, res) => {
+    try {
+      const approach = (req.query.approach as string) || "standard";
+      const market = (req.query.market as string) || "us";
+      
+      const state = getSimulatorState(approach, market);
+      res.json(state);
+    } catch (error) {
+      console.error("Simulator error:", error);
+      res.status(500).json({ message: "Failed to load simulator state" });
     }
   });
 
