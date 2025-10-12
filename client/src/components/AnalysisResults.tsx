@@ -1,4 +1,5 @@
-import { Download, Calendar, ExternalLink, TrendingUp } from "lucide-react";
+import { Download, Calendar, TrendingUp } from "lucide-react";
+import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ClassificationDisplay } from "./ClassificationDisplay";
@@ -86,14 +87,10 @@ export function AnalysisResults({ result, onExportPDF, isExporting }: AnalysisRe
               className="gap-2 shrink-0"
               data-testid="button-compliance-simulator"
             >
-              <a
-                href="https://compliance-simulator.onrender.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link href="/simulator">
+                <TrendingUp className="w-4 h-4" />
                 Open Simulator
-                <ExternalLink className="w-4 h-4" />
-              </a>
+              </Link>
             </Button>
           </div>
         </CardContent>
