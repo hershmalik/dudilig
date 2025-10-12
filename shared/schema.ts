@@ -144,3 +144,51 @@ export const manualInputSchema = z.object({
 });
 
 export type ManualInput = z.infer<typeof manualInputSchema>;
+
+// Compliance Simulator types
+export interface SimulatorMetrics {
+  conversionRate: number;
+  engineeringComplexity: number;
+  regulatoryRisk: number;
+  timeToMarket: number;
+  userFrictionScore: number;
+  annualCost: number;
+  complianceScore: number;
+}
+
+export interface ComplianceApproach {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export interface TargetMarket {
+  id: string;
+  name: string;
+  regulations: string;
+  riskLevel: string;
+  complexity: number;
+}
+
+export interface StrategicRecommendation {
+  category: string;
+  recommendation: string;
+}
+
+export interface ImpactAnalysis {
+  team: string;
+  impact: string;
+  effort: string;
+  timeline: string;
+  dependencies: string;
+}
+
+export interface SimulatorState {
+  approach: string;
+  market: string;
+  metrics: SimulatorMetrics;
+  recommendations: StrategicRecommendation[];
+  impactAnalysis: ImpactAnalysis[];
+  funnelData: { stage: string; value: number }[];
+  tradeoffData: { approach: string; conversion: number; risk: number }[];
+}
