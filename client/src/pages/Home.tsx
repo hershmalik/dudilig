@@ -154,21 +154,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-background sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground tracking-tight">Dudilig</h1>
-            <p className="text-sm text-muted-foreground">AI Compliance Analysis for VC Due Diligence</p>
-          </div>
-          {analysisResult && (
-            <Button onClick={handleNewAnalysis} variant="outline" data-testid="button-new-analysis">
-              New Analysis
-            </Button>
-          )}
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-6 py-12">
         {!currentAnalysisId && !isAnalyzing && (
           <div className="space-y-8">
             <div className="text-center max-w-3xl mx-auto mb-12">
@@ -254,7 +240,15 @@ export default function Home() {
             isExporting={exportMutation.isPending}
           />
         )}
-      </main>
+
+        {analysisResult && (
+          <div className="flex justify-center mt-8">
+            <Button onClick={handleNewAnalysis} variant="outline" data-testid="button-new-analysis">
+              New Analysis
+            </Button>
+          </div>
+        )}
+      </div>
 
       <footer className="border-t border-border bg-card mt-16">
         <div className="max-w-7xl mx-auto px-6 py-6">
