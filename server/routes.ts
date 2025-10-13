@@ -40,9 +40,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const pdfData = await parser.getText();
         const extractedText = pdfData.text;
 
+        console.log(`PDF text extraction: ${extractedText?.trim().length || 0} characters extracted`);
+        
         if (!extractedText || extractedText.trim().length < 50) {
+          console.warn(`PDF text too short: "${extractedText?.substring(0, 100)}..."`);
           return res.status(400).json({ 
-            message: "Could not extract sufficient text from PDF. Please try manual input." 
+            message: "Could not extract enough text from this PDF. This may be an image-based or scanned document. Please use manual input instead." 
           });
         }
 

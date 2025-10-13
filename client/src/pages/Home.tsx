@@ -50,7 +50,7 @@ export default function Home() {
 
   const urlMutation = useMutation({
     mutationFn: async (url: string) => {
-      return apiRequest("POST", "/api/analyze/url", { url });
+      return apiRequest("POST", "/api/analyze/url", { url }) as unknown as { analysisId: string };
     },
     onSuccess: (data: { analysisId: string }) => {
       setCurrentAnalysisId(data.analysisId);
@@ -67,7 +67,7 @@ export default function Home() {
 
   const manualMutation = useMutation({
     mutationFn: async (data: ManualInput) => {
-      return apiRequest("POST", "/api/analyze/manual", data);
+      return apiRequest("POST", "/api/analyze/manual", data) as unknown as { analysisId: string };
     },
     onSuccess: (data: { analysisId: string }) => {
       setCurrentAnalysisId(data.analysisId);
