@@ -40,11 +40,21 @@ export default function Home() {
       queryClient.invalidateQueries({ queryKey: ["/api/analysis"] });
     },
     onError: (error: Error) => {
-      toast({
-        title: "Analysis Failed",
-        description: error.message,
-        variant: "destructive",
-      });
+      // If PDF text extraction fails, auto-switch to manual input
+      if (error.message.includes("Could not extract enough text")) {
+        setShowManualInput(true);
+        toast({
+          title: "Image-Based PDF Detected",
+          description: "This appears to be a slide deck with images. Please fill in the details manually below.",
+          variant: "default",
+        });
+      } else {
+        toast({
+          title: "Analysis Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
     },
   });
 
