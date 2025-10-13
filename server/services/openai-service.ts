@@ -16,6 +16,12 @@ export interface ExtractedCompanyData {
 }
 
 export async function extractCompanyDataFromText(text: string): Promise<ExtractedCompanyData> {
+  // Clean text: remove unicode emojis and special characters that can cause API issues
+  const cleanText = text
+    .replace(/[^\x00-\x7F]/g, ' ')   // Replace all non-ASCII characters with space
+    .replace(/\s+/g, ' ')             // Normalize whitespace
+    .trim();
+
   const prompt = `You are an expert analyst extracting key information from startup pitch decks for compliance analysis.
 
 Extract the following information from the provided text. Return ONLY valid JSON, no other text.
@@ -28,7 +34,7 @@ Required fields:
 - productClaims: Array of key product claims or capabilities
 
 Text to analyze:
-${text.substring(0, 4000)}
+${cleanText.substring(0, 4000)}
 
 Return JSON only:`;
 
