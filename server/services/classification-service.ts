@@ -36,6 +36,8 @@ export interface ClassificationResult {
 export function classifyAISystem(aiUseCase: string): ClassificationResult {
   const rules = loadRules();
   
+  console.log(`[Classification] Input AI use case: "${aiUseCase}"`);
+  
   // First try exact match
   let rule = rules.find(r => 
     r.useCase.toLowerCase() === aiUseCase.toLowerCase()
@@ -44,6 +46,7 @@ export function classifyAISystem(aiUseCase: string): ClassificationResult {
   // If no exact match, try fuzzy matching based on keywords
   if (!rule) {
     const useCaseLower = aiUseCase.toLowerCase();
+    console.log(`[Classification] No exact match, trying fuzzy matching for: "${useCaseLower}"`);
     
     // Medical diagnosis patterns
     if (useCaseLower.includes('medical') || 
@@ -57,6 +60,7 @@ export function classifyAISystem(aiUseCase: string): ClassificationResult {
         useCaseLower.includes('x-ray') ||
         useCaseLower.includes('mri') ||
         useCaseLower.includes('ct scan')) {
+      console.log(`[Classification] Matched medical diagnosis pattern!`);
       rule = rules.find(r => r.useCase === "Medical Diagnosis");
     }
     // Credit scoring patterns
@@ -86,6 +90,7 @@ export function classifyAISystem(aiUseCase: string): ClassificationResult {
   }
 
   if (rule) {
+    console.log(`[Classification] Matched rule "${rule.useCase}" → ${rule.tier}`);
     return {
       tier: rule.tier,
       reason: rule.reason,
@@ -93,6 +98,7 @@ export function classifyAISystem(aiUseCase: string): ClassificationResult {
     };
   }
 
+  console.log(`[Classification] No rule matched, using default → Limited-Risk`);
   const defaultRule = rules.find(r => r.useCase === "Other");
   return {
     tier: defaultRule?.tier || "Limited-Risk",
