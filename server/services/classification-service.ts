@@ -36,9 +36,54 @@ export interface ClassificationResult {
 export function classifyAISystem(aiUseCase: string): ClassificationResult {
   const rules = loadRules();
   
-  const rule = rules.find(r => 
+  // First try exact match
+  let rule = rules.find(r => 
     r.useCase.toLowerCase() === aiUseCase.toLowerCase()
   );
+
+  // If no exact match, try fuzzy matching based on keywords
+  if (!rule) {
+    const useCaseLower = aiUseCase.toLowerCase();
+    
+    // Medical diagnosis patterns
+    if (useCaseLower.includes('medical') || 
+        useCaseLower.includes('diagnosis') || 
+        useCaseLower.includes('disease') ||
+        useCaseLower.includes('cancer') ||
+        useCaseLower.includes('patient') ||
+        useCaseLower.includes('healthcare') ||
+        useCaseLower.includes('clinical') ||
+        useCaseLower.includes('radiology') ||
+        useCaseLower.includes('x-ray') ||
+        useCaseLower.includes('mri') ||
+        useCaseLower.includes('ct scan')) {
+      rule = rules.find(r => r.useCase === "Medical Diagnosis");
+    }
+    // Credit scoring patterns
+    else if (useCaseLower.includes('credit') || 
+             useCaseLower.includes('loan') || 
+             useCaseLower.includes('creditworthiness')) {
+      rule = rules.find(r => r.useCase === "Credit Scoring");
+    }
+    // Recruitment patterns
+    else if (useCaseLower.includes('recruitment') || 
+             useCaseLower.includes('hiring') || 
+             useCaseLower.includes('candidate screening')) {
+      rule = rules.find(r => r.useCase === "Recruitment Screening");
+    }
+    // Biometric patterns
+    else if (useCaseLower.includes('biometric') || 
+             useCaseLower.includes('facial recognition') || 
+             useCaseLower.includes('face recognition')) {
+      rule = rules.find(r => r.useCase === "Biometric Identification");
+    }
+    // Predictive policing patterns
+    else if (useCaseLower.includes('policing') || 
+             useCaseLower.includes('law enforcement') || 
+             useCaseLower.includes('crime prediction')) {
+      rule = rules.find(r => r.useCase === "Predictive Policing");
+    }
+  }
 
   if (rule) {
     return {
