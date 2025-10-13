@@ -34,7 +34,7 @@ Return JSON only:`;
 
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-5",
+      model: "gpt-4o",
       messages: [
         {
           role: "system",
@@ -51,6 +51,7 @@ Return JSON only:`;
 
     const content = response.choices[0]?.message?.content;
     if (!content) {
+      console.error("Empty AI response. Full response:", JSON.stringify(response));
       throw new Error("No response from AI");
     }
 
