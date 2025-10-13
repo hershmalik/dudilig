@@ -72,6 +72,48 @@ Return JSON only:`;
     };
   } catch (error) {
     console.error("Error extracting company data:", error);
+    
+    // Fallback: Try to extract data using pattern matching
+    console.log("Attempting fallback extraction with pattern matching...");
+    try {
+      const fallbackData = extractWithPatterns(text);
+      if (fallbackData) {
+        console.log("Successfully extracted data with fallback method:", fallbackData);
+        return fallbackData;
+      }
+    } catch (fallbackError) {
+      console.error("Fallback extraction also failed:", fallbackError);
+    }
+    
     throw new Error("Failed to extract company information from document");
   }
+}
+
+function extractWithPatterns(text: string): ExtractedCompanyData | null {
+  // Extract company name (look for patterns like "COMPANY" followed by name)
+  const companyMatch = text.match(/(?:COMPANY|Company Name)[:\s]+([A-Za-z0-9\s&.,]+?)(?:\n|SECTOR|Founded|$)/i);
+  
+  // Extract sector (look for patterns like "SECTOR" or "Healthcare AI")
+  const sectorMatch = text.match(/(?:SECTOR|Industry|Vertical)[:\s]+([A-Za-z\s/]+?)(?:\n|FOUNDED|Geography|$)/i) ||
+                      text.match(/(Healthcare AI|FinTech|EdTech|Financial Services|Healthcare|AI\/ML)/i);
+  
+  // Extract geography (look for US, EU, etc.)
+  const geoMatch = text.match(/(?:GEOGRAPHY|Geography|Markets?|Regions?)[:\s]+([A-Za-z\s&,]+?)(?:\n|AI USE CASE|$)/i) ||
+                   text.match(/((?:US|EU|United States|European Union)(?:\s*[&,]\s*(?:US|EU|United States|European Union))?)/i);
+  
+  // Extract AI use case
+  const useCaseMatch = text.match(/(?:AI USE CASE|Use Case|Technology)[:\s]+([A-Za-z\s\-/]+?)(?:\n|MEDICAL|Product|$)/i) ||
+                       text.match(/(Medical Diagnosis|Credit Scoring|Recruitment|Content Moderation|Image Analysis|Computer [Vv]ision)/i);
+  
+  if (companyMatch || sectorMatch || useCaseMatch) {
+    return {
+      companyName: companyMatch?.[1]?.trim() || "Unknown Company",
+      sector: sectorMatch?.[1]?.trim() || "Technology",
+      geography: geoMatch?.[1]?.trim() || "Global",
+      aiUseCase: useCaseMatch?.[1]?.trim() || "Other AI Application",
+      productClaims: []
+    };
+  }
+  
+  return null;
 }
