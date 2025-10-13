@@ -10,15 +10,15 @@ export function ClassificationBadge({ tier, size = "default" }: ClassificationBa
   const config = {
     "High-Risk": {
       icon: ShieldAlert,
-      className: "bg-error text-white border-error",
+      className: "bg-error text-error-foreground border-error",
     },
     "Limited-Risk": {
       icon: Shield,
-      className: "bg-warning text-slate-900 border-warning",
+      className: "bg-warning text-warning-foreground border-warning",
     },
     "Minimal-Risk": {
       icon: ShieldCheck,
-      className: "bg-success text-white border-success",
+      className: "bg-success text-success-foreground border-success",
     },
   }[tier] || {
     icon: Shield,
