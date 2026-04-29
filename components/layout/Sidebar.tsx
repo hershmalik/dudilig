@@ -12,6 +12,7 @@ import {
   MessageSquare,
   Award,
   Microscope,
+  Zap,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -25,6 +26,11 @@ const navItems = [
   { href: "/chat", label: "Compliance AI", icon: MessageSquare },
   { href: "/certificate", label: "Trust Certificate", icon: Award },
 ]
+
+const TOTAL_CREDITS = 5000
+const USED_CREDITS = 3247
+const REMAINING = TOTAL_CREDITS - USED_CREDITS
+const PCT_USED = (USED_CREDITS / TOTAL_CREDITS) * 100
 
 export function Sidebar() {
   const pathname = usePathname()
@@ -71,6 +77,38 @@ export function Sidebar() {
           )
         })}
       </nav>
+
+      {/* Credit meter */}
+      <div className="px-3 pb-3">
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2.5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <Zap className="w-3 h-3 text-violet-400" />
+              <span className="text-xs font-medium text-slate-300">Credits</span>
+            </div>
+            <span className="text-xs text-slate-500">Platform tier</span>
+          </div>
+
+          <div className="space-y-1.5">
+            <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full bg-violet-500 transition-all"
+                style={{ width: `${PCT_USED}%` }}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-slate-400">
+                <span className="font-semibold text-slate-200">{REMAINING.toLocaleString()}</span> remaining
+              </span>
+              <span className="text-xs text-slate-600">{TOTAL_CREDITS.toLocaleString()} / mo</span>
+            </div>
+          </div>
+
+          <button className="w-full py-1.5 text-xs font-medium text-violet-400 hover:text-violet-300 border border-violet-600/20 hover:border-violet-600/40 rounded-lg transition-colors">
+            Top up credits
+          </button>
+        </div>
+      </div>
 
       {/* Footer */}
       <div className="px-4 py-4 border-t border-slate-800">
