@@ -11,6 +11,7 @@ import {
   ChevronRight,
   MessageSquare,
   Award,
+  Microscope,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -18,6 +19,7 @@ const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/investors", label: "Investors", icon: Users },
   { href: "/attestation", label: "Attestation", icon: ShieldCheck },
+  { href: "/analyze", label: "Contract Analyzer", icon: Microscope },
   { href: "/filings", label: "Filings", icon: FileText },
   { href: "/tokens", label: "Tokens", icon: Layers },
   { href: "/chat", label: "Compliance AI", icon: MessageSquare },
@@ -28,7 +30,7 @@ export function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-60 shrink-0 bg-slate-950 border-r border-slate-800 flex flex-col h-screen sticky top-0">
+    <aside className="hidden lg:flex w-60 shrink-0 bg-slate-950 border-r border-slate-800 flex-col h-screen sticky top-0">
       {/* Logo */}
       <div className="px-6 py-5 border-b border-slate-800">
         <div className="flex items-center gap-2.5">

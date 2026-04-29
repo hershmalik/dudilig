@@ -27,9 +27,9 @@ export default function FilingsPage() {
         subtitle={`${filings.filter(f => f.status !== "submitted").length} open · ${filings.filter(f => f.status === "overdue").length} overdue`}
       />
 
-      <div className="p-8 space-y-6">
+      <div className="p-4 sm:p-8 space-y-6">
         {/* Summary row */}
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {Object.entries(grouped).map(([status, items]) => {
             const cfg = statusConfig[status as keyof typeof statusConfig]
             const Icon = cfg.icon

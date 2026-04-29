@@ -25,15 +25,15 @@ export default function DashboardPage() {
         subtitle="Meridian Capital Partners · Cayman Islands"
       />
 
-      <div className="p-8 space-y-6">
+      <div className="p-4 sm:p-8 space-y-4 sm:space-y-6">
         {/* Score + KPIs */}
-        <div className="grid grid-cols-5 gap-4">
-          <Card className="col-span-2 p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+          <Card className="lg:col-span-2 p-6">
             <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-4">Compliance Health</p>
             <ComplianceScoreRing score={84} />
           </Card>
 
-          <div className="col-span-3 grid grid-cols-3 gap-4">
+          <div className="lg:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-4">
             <KpiCard
               label="Active Investors"
               value={investors.filter(i => i.kycStatus === "verified").length}
@@ -70,7 +70,7 @@ export default function DashboardPage() {
               badge={failedAttestation > 0 ? <Badge variant="error">{failedAttestation} failed</Badge> : undefined}
             />
             <KpiCard
-              label="Total AUM (Tokenized)"
+              label="Total AUM"
               value={formatCurrency(tokens.reduce((s, t) => s + t.totalRaise, 0))}
               icon={Layers}
               delta={`${tokens.length} active tokens`}
@@ -88,7 +88,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Token table */}
+        {/* Token table — scrollable on mobile */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -97,66 +97,68 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent className="pt-0 px-0 pb-0">
-            <table className="w-full">
-              <thead>
-                <tr className="border-t border-slate-800">
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Token</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Jurisdiction</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Raise</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Investors</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Compliance</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Attestation</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tokens.map((token, i) => (
-                  <tr key={token.id} className={`border-t border-slate-800 hover:bg-slate-800/30 transition-colors ${i === tokens.length - 1 ? "rounded-b-xl" : ""}`}>
-                    <td className="px-6 py-4">
-                      <p className="text-sm font-medium text-slate-200">{token.name}</p>
-                      <p className="text-xs text-slate-500 mt-0.5">{token.standard} · {token.network}</p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <p className="text-sm text-slate-300">{token.jurisdiction}</p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <p className="text-sm text-slate-300">{formatCurrency(token.totalRaise)}</p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <p className="text-sm text-slate-300">{token.currentInvestors}/{token.maxInvestors}</p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 max-w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                          <div
-                            className="h-full rounded-full"
-                            style={{
-                              width: `${token.complianceScore}%`,
-                              background: token.complianceScore >= 80 ? "#10b981" : token.complianceScore >= 60 ? "#f59e0b" : "#ef4444"
-                            }}
-                          />
-                        </div>
-                        <span className="text-xs text-slate-400">{token.complianceScore}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <Badge
-                        variant={
-                          token.attestationStatus === "verified" ? "success" :
-                          token.attestationStatus === "failed" ? "error" : "warning"
-                        }
-                      >
-                        {token.attestationStatus}
-                      </Badge>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[600px]">
+                <thead>
+                  <tr className="border-t border-slate-800">
+                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Token</th>
+                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Jurisdiction</th>
+                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Raise</th>
+                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Investors</th>
+                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Compliance</th>
+                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Attestation</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {tokens.map((token, i) => (
+                    <tr key={token.id} className={`border-t border-slate-800 hover:bg-slate-800/30 transition-colors ${i === tokens.length - 1 ? "rounded-b-xl" : ""}`}>
+                      <td className="px-6 py-4">
+                        <p className="text-sm font-medium text-slate-200">{token.name}</p>
+                        <p className="text-xs text-slate-500 mt-0.5">{token.standard} · {token.network}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm text-slate-300">{token.jurisdiction}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm text-slate-300">{formatCurrency(token.totalRaise)}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm text-slate-300">{token.currentInvestors}/{token.maxInvestors}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 max-w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div
+                              className="h-full rounded-full"
+                              style={{
+                                width: `${token.complianceScore}%`,
+                                background: token.complianceScore >= 80 ? "#10b981" : token.complianceScore >= 60 ? "#f59e0b" : "#ef4444"
+                              }}
+                            />
+                          </div>
+                          <span className="text-xs text-slate-400">{token.complianceScore}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <Badge
+                          variant={
+                            token.attestationStatus === "verified" ? "success" :
+                            token.attestationStatus === "failed" ? "error" : "warning"
+                          }
+                        >
+                          {token.attestationStatus}
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </CardContent>
         </Card>
 
         {/* Activity + Deadlines */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Card>
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>

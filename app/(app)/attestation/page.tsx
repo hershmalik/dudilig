@@ -44,7 +44,7 @@ function AttestationExplainer() {
   ]
 
   return (
-    <div className="mx-8 mt-6 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+    <div className="mx-4 sm:mx-8 mt-6 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
       <div className="px-6 py-5 border-b border-slate-800">
         <p className="text-sm font-semibold text-slate-200">How the attestation engine works</p>
         <p className="text-xs text-slate-500 mt-1">The problem it solves, in plain English</p>
@@ -52,22 +52,20 @@ function AttestationExplainer() {
 
       {/* Flow diagram */}
       <div className="px-6 py-6">
-        <div className="flex items-start gap-2">
+        <div className="flex flex-col sm:flex-row items-start gap-2">
           {steps.map((step, i) => {
             const Icon = step.icon
             return (
-              <div key={i} className="flex items-start gap-2 flex-1">
-                <div className="flex-1">
-                  <div className={`border rounded-xl p-4 ${step.bg}`}>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Icon className={`w-4 h-4 ${step.color}`} />
-                      <p className={`text-xs font-semibold ${step.color}`}>{step.title}</p>
-                    </div>
-                    <p className="text-xs text-slate-400 leading-relaxed">{step.description}</p>
+              <div key={i} className="flex sm:flex-col items-start sm:items-start gap-2 w-full sm:flex-1">
+                <div className={`border rounded-xl p-4 ${step.bg} w-full`}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Icon className={`w-4 h-4 ${step.color}`} />
+                    <p className={`text-xs font-semibold ${step.color}`}>{step.title}</p>
                   </div>
+                  <p className="text-xs text-slate-400 leading-relaxed">{step.description}</p>
                 </div>
                 {i < steps.length - 1 && (
-                  <ArrowRight className="w-4 h-4 text-slate-700 shrink-0 mt-6" />
+                  <ArrowRight className="w-4 h-4 text-slate-700 shrink-0 mt-1 sm:hidden rotate-90" />
                 )}
               </div>
             )
@@ -130,9 +128,9 @@ export default function AttestationPage() {
         </div>
       )}
 
-      <div className="p-8 space-y-6">
+      <div className="p-4 sm:p-8 space-y-6">
         {/* Token selector */}
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           {tokens.map(token => (
             <button
               key={token.id}
@@ -159,7 +157,7 @@ export default function AttestationPage() {
         </div>
 
         {/* Main 2-col layout */}
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left: Contract */}
           <Card className="p-6">
             <ContractCodeBlock />
@@ -177,7 +175,8 @@ export default function AttestationPage() {
           <div className="px-6 py-4 border-b border-slate-800">
             <p className="text-sm font-medium text-slate-200">Attestation History</p>
           </div>
-          <table className="w-full">
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[500px]">
             <thead>
               <tr className="border-b border-slate-800">
                 <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Token</th>
@@ -220,6 +219,7 @@ export default function AttestationPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </Card>
       </div>
     </div>

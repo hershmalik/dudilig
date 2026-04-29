@@ -49,10 +49,10 @@ export default function InvestorsPage() {
           subtitle={`${investors.length} investors · ${investors.filter(i => i.kycStatus === "flagged").length} flagged`}
         />
 
-        <div className="p-8 space-y-4 flex-1">
+        <div className="p-4 sm:p-8 space-y-4 flex-1">
           {/* Filters */}
-          <div className="flex items-center gap-3">
-            <div className="relative flex-1 max-w-sm">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div className="relative flex-1 sm:max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <input
                 type="text"
@@ -62,7 +62,7 @@ export default function InvestorsPage() {
                 className="w-full pl-9 pr-4 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-300 placeholder-slate-600 focus:outline-none focus:border-violet-600 transition-colors"
               />
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {(["all", "verified", "pending", "flagged", "expired"] as KycFilter[]).map(f => (
                 <button
                   key={f}
@@ -81,7 +81,8 @@ export default function InvestorsPage() {
 
           {/* Table */}
           <Card className="overflow-hidden">
-            <table className="w-full">
+            <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px]">
               <thead>
                 <tr className="border-b border-slate-800">
                   <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Investor</th>
@@ -128,13 +129,15 @@ export default function InvestorsPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </Card>
         </div>
       </div>
 
-      {/* Drawer */}
+      {/* Drawer — full-screen on mobile, sidebar on desktop */}
       {selected && (
-        <div className="w-80 shrink-0 border-l border-slate-800 bg-slate-900 overflow-y-auto">
+        <div className="fixed inset-0 z-50 lg:relative lg:inset-auto lg:z-auto lg:w-80 lg:shrink-0 lg:border-l lg:border-slate-800 lg:bg-slate-900 lg:overflow-y-auto">
+          <div className="h-full bg-slate-900 overflow-y-auto lg:h-auto">
           <div className="p-5 border-b border-slate-800 flex items-center justify-between">
             <p className="text-sm font-semibold text-slate-200">Investor Detail</p>
             <button onClick={() => setSelected(null)} className="text-slate-500 hover:text-slate-300">
@@ -210,6 +213,7 @@ export default function InvestorsPage() {
                 </button>
               )}
             </div>
+          </div>
           </div>
         </div>
       )}

@@ -82,7 +82,7 @@ export default function ChatPage() {
         subtitle="Ask anything about your compliance program"
       />
 
-      <div className="flex-1 overflow-y-auto px-8 py-6 space-y-4">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 space-y-4">
         {messages.map(msg => (
           <div key={msg.id} className={cn("flex gap-3", msg.role === "user" ? "justify-end" : "justify-start")}>
             {msg.role === "assistant" && (
@@ -122,7 +122,7 @@ export default function ChatPage() {
 
       {/* Suggestions */}
       {messages.length <= 1 && (
-        <div className="px-8 pb-4">
+        <div className="px-4 sm:px-8 pb-4">
           <p className="text-xs text-slate-600 mb-3 flex items-center gap-1.5">
             <Sparkles className="w-3 h-3" /> Suggested prompts
           </p>
@@ -141,7 +141,7 @@ export default function ChatPage() {
       )}
 
       {/* Input */}
-      <div className="px-8 pb-6">
+      <div className="px-4 sm:px-8 pb-6">
         <form onSubmit={handleSubmit} className="flex gap-3">
           <input
             value={input}
