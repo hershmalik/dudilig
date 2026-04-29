@@ -9,7 +9,94 @@ import { Card } from "@/components/ui/card"
 import { attestationHistory } from "@/lib/mock-data/attestations"
 import { formatDate, timeAgo } from "@/lib/utils"
 import { tokens } from "@/lib/mock-data/tokens"
-import { AlertTriangle, CheckCircle2, XCircle } from "lucide-react"
+import { AlertTriangle, CheckCircle2, XCircle, FileText, Code2, ShieldCheck, Share2, ArrowRight } from "lucide-react"
+
+function AttestationExplainer() {
+  const steps = [
+    {
+      icon: FileText,
+      color: "text-blue-400",
+      bg: "bg-blue-500/10 border-blue-500/20",
+      title: "Legal Document",
+      description: "Fund manager files offering docs stating rules: \"max 250 investors, accredited only, 12-month lockup.\"",
+    },
+    {
+      icon: Code2,
+      color: "text-violet-400",
+      bg: "bg-violet-500/10 border-violet-500/20",
+      title: "Smart Contract",
+      description: "A separate piece of code is deployed on-chain. It may — or may not — actually enforce those rules.",
+    },
+    {
+      icon: ShieldCheck,
+      color: "text-emerald-400",
+      bg: "bg-emerald-500/10 border-emerald-500/20",
+      title: "Attestation Engine",
+      description: "Dudilig reads the contract code directly and checks every claim. Produces a cryptographic proof of the result.",
+    },
+    {
+      icon: Share2,
+      color: "text-amber-400",
+      bg: "bg-amber-500/10 border-amber-500/20",
+      title: "Trust Certificate",
+      description: "A shareable public certificate any LP, regulator, or liquidity provider can verify — no code-reading required.",
+    },
+  ]
+
+  return (
+    <div className="mx-8 mt-6 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+      <div className="px-6 py-5 border-b border-slate-800">
+        <p className="text-sm font-semibold text-slate-200">How the attestation engine works</p>
+        <p className="text-xs text-slate-500 mt-1">The problem it solves, in plain English</p>
+      </div>
+
+      {/* Flow diagram */}
+      <div className="px-6 py-6">
+        <div className="flex items-start gap-2">
+          {steps.map((step, i) => {
+            const Icon = step.icon
+            return (
+              <div key={i} className="flex items-start gap-2 flex-1">
+                <div className="flex-1">
+                  <div className={`border rounded-xl p-4 ${step.bg}`}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Icon className={`w-4 h-4 ${step.color}`} />
+                      <p className={`text-xs font-semibold ${step.color}`}>{step.title}</p>
+                    </div>
+                    <p className="text-xs text-slate-400 leading-relaxed">{step.description}</p>
+                  </div>
+                </div>
+                {i < steps.length - 1 && (
+                  <ArrowRight className="w-4 h-4 text-slate-700 shrink-0 mt-6" />
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Plain language explainer */}
+      <div className="px-6 pb-6">
+        <div className="bg-slate-800/50 rounded-xl p-5 border border-slate-700">
+          <p className="text-xs font-semibold text-slate-300 mb-2">Real example</p>
+          <p className="text-xs text-slate-400 leading-relaxed">
+            A Singapore-based tokenized private credit fund launches a Reg S offering for non-US investors only. Their lawyer filed the right documents. But does the smart contract actually block US wallet addresses? Dudilig reads the contract, verifies the geo-blocking and accreditation logic is correctly implemented, and issues a signed attestation certificate. That certificate is what gets Wintermute or Galaxy Digital comfortable enough to provide liquidity — without it, they won't touch it.
+          </p>
+        </div>
+      </div>
+
+      {/* The key insight */}
+      <div className="px-6 pb-6">
+        <div className="flex items-start gap-3 bg-red-500/5 border border-red-500/15 rounded-xl p-4">
+          <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+          <p className="text-xs text-slate-400 leading-relaxed">
+            <span className="text-red-400 font-medium">The gap nobody talks about:</span> Legal documents and smart contracts are two completely separate things. The contract could say one thing and do another — and nobody would know until something goes wrong in a trade or an audit. Toggle "Simulate mismatch" below to see what that looks like.
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function AttestationPage() {
   const [failMode, setFailMode] = useState(false)
@@ -32,8 +119,10 @@ export default function AttestationPage() {
         }
       />
 
+      <AttestationExplainer />
+
       {failMode && (
-        <div className="mx-8 mt-6 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 flex items-center gap-3">
+        <div className="mx-8 mt-4 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 flex items-center gap-3">
           <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
           <p className="text-xs text-red-300">
             Demo mode: simulating a contract where <span className="font-mono">MAX_INVESTORS = 500</span> but the offering documents claim <span className="font-mono">250</span>. Watch the attestation catch it.

@@ -38,10 +38,17 @@ export default function Home() {
         </div>
 
         <Link
-          href="/dashboard"
+          href="/login"
           className="inline-flex items-center gap-2 w-full justify-center py-3 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-xl transition-colors"
         >
-          Enter Demo
+          Get Started
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+        <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-2 w-full justify-center py-3 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-sm rounded-xl transition-colors"
+        >
+          View Demo
           <ArrowRight className="w-4 h-4" />
         </Link>
 

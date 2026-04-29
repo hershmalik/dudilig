@@ -9,6 +9,8 @@ import {
   FileText,
   Layers,
   ChevronRight,
+  MessageSquare,
+  Award,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -18,6 +20,8 @@ const navItems = [
   { href: "/attestation", label: "Attestation", icon: ShieldCheck },
   { href: "/filings", label: "Filings", icon: FileText },
   { href: "/tokens", label: "Tokens", icon: Layers },
+  { href: "/chat", label: "Compliance AI", icon: MessageSquare },
+  { href: "/certificate", label: "Trust Certificate", icon: Award },
 ]
 
 export function Sidebar() {
