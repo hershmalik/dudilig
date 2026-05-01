@@ -7,7 +7,10 @@ interface CardProps {
 
 export function Card({ children, className }: CardProps) {
   return (
-    <div className={cn("bg-slate-900 border border-slate-800 rounded-xl", className)}>
+    <div
+      className={cn("rounded-2xl overflow-hidden", className)}
+      style={{ background: "var(--bg-elevated)", border: "1px solid var(--rule)" }}
+    >
       {children}
     </div>
   )
@@ -31,7 +34,10 @@ export function CardContent({ children, className }: CardProps) {
 
 export function CardTitle({ children, className }: CardProps) {
   return (
-    <h3 className={cn("text-sm font-medium text-slate-400", className)}>
+    <h3
+      className={cn("text-sm font-medium", className)}
+      style={{ color: "var(--text-muted)" }}
+    >
       {children}
     </h3>
   )
