@@ -356,6 +356,31 @@ export default function AnalyzePage() {
                   </div>
                 </Card>
 
+                {/* Prominent Publish CTA banner */}
+                {!publishedCert && (
+                  <button
+                    onClick={() => {
+                      document.getElementById("publish-section")?.scrollIntoView({ behavior: "smooth", block: "start" })
+                      document.getElementById("publish-issuer")?.focus({ preventScroll: true })
+                    }}
+                    data-testid="button-jump-to-publish"
+                    className="w-full flex items-center justify-between gap-4 p-4 bg-gradient-to-r from-emerald-500/15 via-emerald-500/10 to-violet-500/10 border border-emerald-500/30 rounded-xl hover-elevate active-elevate-2 transition-shadow text-left group"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-9 h-9 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                        <ShieldCheck className="w-4 h-4 text-emerald-300" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-emerald-200">Publish as Trust Certificate →</p>
+                        <p className="text-xs text-slate-400 mt-0.5">
+                          Turn this analysis into a public, signed, shareable URL. No login to view.
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-emerald-300 shrink-0 group-hover:translate-y-0.5 transition-transform" />
+                  </button>
+                )}
+
                 {/* Critical issues */}
                 {result.criticalIssues.length > 0 && (
                   <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 space-y-2">
@@ -425,7 +450,10 @@ export default function AnalyzePage() {
                 )}
 
                 {/* Publish as Trust Certificate */}
-                <Card className="p-6">
+                <div id="publish-section" className="scroll-mt-6">
+                <Card
+                  className="p-6 border-emerald-500/30 bg-gradient-to-br from-emerald-500/[0.04] to-transparent shadow-[0_0_0_1px_rgba(16,185,129,0.15)]"
+                >
                   <div className="flex items-start gap-3 mb-4">
                     <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
                       <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -582,6 +610,7 @@ export default function AnalyzePage() {
                     </div>
                   )}
                 </Card>
+                </div>
               </>
             )}
           </div>
