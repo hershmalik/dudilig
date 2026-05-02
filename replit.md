@@ -1,252 +1,151 @@
-# Dudilig - AI Compliance Analysis for VC Due Diligence
+# Dudilig — Compliance OS for Tokenized Real-World Assets
 
 ## Overview
-Dudilig is an AI-powered compliance analysis platform that transforms startup pitch decks into cited EU AI Act risk briefs with deal-term impact scenarios in under 3 minutes. Built for venture capital associates and partners conducting due diligence on AI and Web3 startups.
+Dudilig is the AI-native compliance work platform for tokenized real-world asset (RWA) issuers. It automates KYC/AML monitoring, smart contract attestation (verifying on-chain code matches off-chain claims), regulatory filings, and investor registry management — turning compliance from a launch-blocker into a continuously verifiable trust signal.
 
-**Tagline:** From Deck to Deal Terms — with Citations
+**Tagline:** The Compliance OS for Tokenized Assets
+
+**Real production app:** dudilig.com
+**Real repo:** github.com/hershmalik/dudilig
 
 ## Current State
-**Version:** 1.3 (Strategy Edition)
-**Status:** Fully functional MVP with compliance analysis + strategy simulator
-**Last Updated:** October 12, 2025
-**Test Status:** ✅ End-to-end tested and verified (including simulator)
+**Stack version:** Next.js 16.2.4 + React 19.2.4 + Tailwind 4 + Anthropic SDK
+**Status:** Real product in production. The 24-hour Replit Agent 4 sprint to ship the public Trust Certificate flow is **complete and hardened**. Three live, signed, publicly-routable demo certificates are seeded; homepage links to them; embed + OG image routes live; abuse guards on POST endpoint; canonical hash matches JSON.stringify semantics; bad cert IDs render 404 (not 500); findings panel defaults open for demos.
+**Last Updated:** May 2, 2026
 
-## Key Features
+## Sprint Output (shipped)
 
-### 1. Multi-Modal Input
-- **PDF Upload:** Drag-and-drop pitch deck analysis with automatic text extraction
-- **URL Input:** Analyze pitch decks from public URLs
-- **Manual Entry:** Structured form for direct company data input
+### Hardening fixes (post-architect-review)
+- `lib/crypto/hash.ts` — `canonicalize()` now matches `JSON.stringify` semantics for non-serializable values: `undefined` in arrays → `null`; `undefined` object values omitted; functions/symbols treated like undefined. Determinism across key order verified.
+- `lib/storage/certificates.ts` — `getCertificate()` returns `null` for malformed ids (was throwing) so invalid `/trust/<bad>` URLs render Next's 404 instead of a 500.
+- `app/api/certificates/route.ts` (POST) — added: optional `CERT_API_TOKEN` env / `X-Cert-Token` header gate (when env unset, endpoint stays open for dev/seeder), 100KB body cap, 60KB contractCode cap, 1KB caps on text fields. Closes the cost-amplification + disk-fill DoS surface flagged by the architect.
+- `scripts/seed-certificates.ts` — sends `X-Cert-Token` header when `CERT_API_TOKEN` is set in env.
+- `components/trust/TrustCertificate.tsx` — rule findings panel defaults to OPEN (better demo UX, also fixes flaky e2e click-toggle).
 
-### 2. AI-Powered Analysis
-- **NER Extraction:** GPT-5 powered named entity recognition extracts company name, sector, geography, and AI use case from documents
-- **Deterministic Classification:** Rules-based EU AI Act tier assignment (High-Risk, Limited-Risk, Minimal-Risk)
-- **Gap Analysis:** Automated compliance gap identification with 5 key checkpoints
-- **Scenario Modeling:** 2026 enforcement prediction with cost/timeline impacts
+### Production env (Render) — set this
+- `CERT_API_TOKEN` — any random string. Required to gate public POST submissions.
 
-### 3. Enterprise UI
-- **Design System:** Clean enterprise aesthetic with Inter and JetBrains Mono fonts
-- **Professional Components:** Tier badges, citation chips, status indicators (R/Y/G)
-- **Responsive Layout:** Optimized for desktop and tablet viewing
-- **Loading States:** Beautiful animated states during analysis
+### New code paths
+- `lib/services/analyze-claude.ts` — extracted Claude Opus 4.5 call, shared by `/api/analyze` and `/api/certificates`. The `/api/analyze` UX is unchanged; this is a non-breaking refactor.
+- `lib/crypto/hash.ts` — canonical JSON serializer + real SHA-256 attestation hash.
+- `lib/storage/certificates.ts` — file-based JSON persistence under `data/certificates/{id}.json`, URL-safe 12-char IDs.
+- `lib/storage/seed.ts` + `data/certificates/_seed.json` — manifest mapping the three demo cert keys to ids.
+- `app/api/certificates/route.ts` (POST + GET) — create cert from contract+claims, lists all.
+- `app/api/certificates/[id]/route.ts` — fetch raw cert JSON.
+- `app/api/og/[id]/route.tsx` — `next/og` ImageResponse for OG previews.
+- `app/trust/[id]/page.tsx` + `app/trust/layout.tsx` — public, auth-free certificate page.
+- `app/trust/[id]/embed/page.tsx` + `embed/layout.tsx` — transparent-background iframe-friendly card.
+- `components/trust/TrustCertificate.tsx` + `TrustCertificateEmbed.tsx` — UI components.
+- `app/page.tsx` — homepage now reads the seed manifest server-side and showcases the three live certs.
+- `scripts/seed-certificates.ts` — idempotent seed script (`npx tsx scripts/seed-certificates.ts`); uses the live API.
+- `docs/a16z-speedrun.md` — Speedrun application writeup.
 
-### 4. Citation-First Output
-- **100% Coverage:** Every regulatory claim includes source citation
-- **EU AI Act References:** Direct links to articles, recitals, and annexes
-- **Confidence Tags:** High/Medium/Low confidence indicators on all outputs
-- **Legal Disclaimer:** Clear "not legal advice" banner on all outputs
+### Demo certificate IDs (current seed)
+- **Clean pass (ERC-1400):** `/trust/z3ud7652qmq4` — Meridian Private Credit Fund I, PASS 88/100
+- **Warnings (Reg D 506(c)):** `/trust/c9zg8s7ayn3q` — Aspen Ranchland REIT Series A, REVIEW 58/100
+- **Mismatch (Reg D 506(c)):** `/trust/3fppf3bxwx47` — Gulf Real Estate Income Trust, FAIL 32/100 (claimed 250 cap / on-chain 500)
 
-### 5. PDF Export
-- **1-Page Brief:** IC-ready compliance brief with all findings
-- **Professional Formatting:** Branded layout with metrics, gaps, and scenarios
-- **Download Ready:** Instant PDF generation for investment committee memos
+To re-seed (will burn 3 Claude calls): `npx tsx scripts/seed-certificates.ts --force`
 
-### 6. Strategy Simulator
-- **Interactive Modeling:** Explore 4 compliance approaches (Standard, AI-Optimized, Minimal, Full Verification)
-- **Market Analysis:** Model impacts across 5 regulatory jurisdictions (US, EU, UK, Singapore, Japan)
-- **Real-Time Metrics:** 7 key metrics update dynamically (conversion, complexity, risk, cost, timeline, friction, compliance score)
-- **Visual Analytics:** Interactive charts (funnel conversion, risk/conversion trade-off)
-- **Strategic Guidance:** Context-specific recommendations for Engineering, Compliance, and Product teams
-- **Impact Planning:** Cross-functional analysis table with effort, timeline, and dependencies
-- **Integrated Experience:** Seamless navigation from compliance analysis to strategy modeling
+## Hackathon Sprint Goal (24h)
+Ship a real, public, signed, embeddable Trust Certificate URL backed by the production Claude analyzer — the network-effect lever identified in the PRD as the 90-day milestone.
 
-## Architecture
+### In scope
+1. Persistence layer for analysis runs (file-based JSON for the sprint)
+2. Public route `/trust/[id]` — no auth, no app shell
+3. Real SHA-256 hash of canonical attestation payload (replaces hardcoded placeholder)
+4. Embeddable lightweight `/trust/[id]/embed` route + copy-paste iframe snippet
+5. Three pre-seeded certificates linked from the homepage:
+   - Clean pass (well-formed ERC-3643)
+   - Pass with warnings (partial accreditation enforcement)
+   - Mismatch demo (claimed 250 investor cap / enforced 500)
+6. Open Graph image generation for shareable previews
+7. a16z Speedrun writeup
 
-### Frontend Stack
-- **Framework:** React 18 with TypeScript
-- **Routing:** Wouter for client-side navigation
-- **State Management:** TanStack Query v5 for server state
-- **UI Components:** Shadcn UI with Tailwind CSS
-- **Forms:** React Hook Form with Zod validation
-- **Icons:** Lucide React
-- **Visualizations:** Recharts for interactive data charts
+### Out of scope (v1)
+- EAS testnet anchoring (stretch only if hours 20-24 available)
+- Real-chain RPC reads
+- Form D drafting agent
+- Auth and DB migration
 
-### Backend Stack
-- **Runtime:** Node.js 20 with Express
-- **AI Integration:** OpenAI GPT-5 via Replit AI Integrations (no API key required)
-- **PDF Processing:** pdf-parse for text extraction, Puppeteer for generation
-- **Data Format:** YAML for rules engine, in-memory storage for demo
-- **Type Safety:** Shared TypeScript schemas between frontend/backend
+## Existing Surfaces (production code, do not regress)
 
-### Data Sources
-- **EU AI Act Corpus:** Curated YAML rules mapping use cases to tiers
-- **Compliance Templates:** YAML gap analysis templates by risk tier
-- **Scenario Parameters:** JSON-based cost/timeline impact calculations
-- **Citations:** Structured references to official EU legal text
+### Public routes
+- `/` — marketing landing
+- `/login` — auth entry
 
-## User Journey
+### Authenticated `(app)/` routes
+- `/dashboard` — KPIs, compliance score ring, activity feed, deadline timeline
+- `/analyze` — **Live Claude Opus 4.5 contract analyzer.** Pasted Solidity → rule-by-rule pass/fail/warning per standard. Standards: Reg D 506(c), Reg S, MiCA, ERC-1400. This is the only real production AI surface and the foundation for the Trust Certificate work.
+- `/attestation` — Attestation Engine UI (currently mock data, fail-mode toggle)
+- `/certificate` — Trust Certificate viewer (currently hardcoded mock; being replaced by `/trust/[id]`)
+- `/tokens`, `/investors`, `/filings`, `/chat`, `/onboarding`
 
-### Compliance Analysis Flow
-1. **Upload:** User drops pitch deck PDF, pastes URL, or fills manual form
-2. **Extract:** AI extracts company data (or uses manual input)
-3. **Classify:** Deterministic rules assign EU AI Act tier with citations
-4. **Analyze:** System identifies 4-5 compliance gaps with actions
-5. **Simulate:** 2026 scenario shows cost/timeline/deal-term impacts
-6. **Export:** User downloads 1-page PDF brief for IC review
+### API
+- `POST /api/analyze` — production Claude integration. Schema-enforced JSON output. **Do not break this.**
 
-**Target Time:** < 3 minutes from upload to export
+## Architecture Highlights
 
-### Strategy Simulator Flow
-1. **Navigate:** Click "Strategy Simulator" from analysis results or header nav
-2. **Select Approach:** Choose compliance implementation strategy (Standard, AI-Optimized, Minimal, Full)
-3. **Select Market:** Choose target regulatory jurisdiction (US, EU, UK, Singapore, Japan)
-4. **Review Metrics:** See real-time updates to conversion, cost, risk, timeline, and compliance scores
-5. **Analyze Impact:** Review strategic recommendations and cross-functional team impact
-6. **Compare:** Use charts to visualize trade-offs between approaches
+### Frontend
+- **Next.js 16.2.4 App Router with Turbopack.** AGENTS.md warns: this is a new Next.js with breaking changes; consult `node_modules/next/dist/docs/` before writing new Next.js code.
+- **React 19.2.4**
+- **Tailwind 4** via `@tailwindcss/postcss`
+- **UI:** Radix dialog/slot, Lucide icons, Framer Motion, Recharts
+- **Custom CSS variables** in `app/globals.css` (`--bg-base`, `--accent-blue`, `--accent-green`, etc.) — design system relies on these, not on shadcn theming
 
-**Value Prop:** Transforms compliance from blocker to strategic decision with quantified trade-offs
+### Backend
+- **API routes** under `app/api/`
+- **Anthropic SDK** with `claude-opus-4-5` model
+- Reads `ANTHROPIC_API_KEY` from env
+
+### Data
+- All current data is mocked in `lib/mock-data/` (tokens, attestations, investors, filings, activity)
+- Sprint adds file-based JSON persistence under `data/certificates/` for trust certificate records
 
 ## Project Structure
-
 ```
-/client
-  /src
-    /components        # Reusable UI components
-      UploadDropzone.tsx
-      ClassificationDisplay.tsx
-      ComplianceGapCard.tsx
-      ScenarioPanel.tsx
-      AnalysisResults.tsx
-      ManualInputForm.tsx
-      LoadingAnalysis.tsx
-    /pages            # Route pages
-      Home.tsx
-      Analysis.tsx
-      Simulator.tsx
-    /lib              # Utilities
-    index.css         # Global styles
-  index.html          # Entry point
+/app
+  /(app)/           # Authenticated app surfaces
+    dashboard/, analyze/, attestation/, certificate/,
+    tokens/, investors/, filings/, chat/, onboarding/
+  /api/
+    analyze/        # Real Claude integration
+  /trust/[id]/      # NEW — public trust certificate (sprint)
+  layout.tsx, page.tsx, globals.css
 
-/server
-  /data               # Rules and templates
-    eu-ai-act-rules.yaml
-    compliance-gaps.yaml
-  /services           # Business logic
-    openai-service.ts
-    classification-service.ts
-    gap-analysis-service.ts
-    scenario-service.ts
-    pdf-service.ts
-    simulator-service.ts
-  routes.ts           # API endpoints
-  storage.ts          # In-memory data store
+/components
+  /attestation/     # AttestationEngine, ContractCodeBlock
+  /layout/          # TopBar, Sidebar, MobileNav
+  /ui/              # badge, card
 
-/shared
-  schema.ts           # Shared TypeScript types
+/lib
+  /mock-data/       # tokens, attestations, investors, filings, activity
+  /types/           # Domain types
+  utils.ts          # cn, formatCurrency, formatDate, timeAgo
+
+/data               # NEW — sprint persistence layer
+  /certificates/    # JSON-per-certificate
 ```
 
-## API Endpoints
+## Replit Workspace Setup
+- **Workflow:** "Start application" runs `npx next dev -p 5000 -H 0.0.0.0`
+- **Port:** 5000 (Replit standard, mapped to external 80)
+- **Node:** 20 (via Replit nodejs-20 module)
+- **Secrets needed:** `ANTHROPIC_API_KEY`
 
-### POST /api/analyze/upload
-Upload PDF pitch deck for analysis
-- **Input:** multipart/form-data with PDF file
-- **Output:** `{ analysisId: string }`
+## Production Deployment (Render)
+- `render.yaml` configured for Render web service
+- Build: `npm install && npm run build`
+- Start: `npm start`
+- Production port: 3000
 
-### POST /api/analyze/url
-Analyze from URL (uses fallback data in demo)
-- **Input:** `{ url: string }`
-- **Output:** `{ analysisId: string }`
-
-### POST /api/analyze/manual
-Manual company data submission
-- **Input:** ManualInput schema
-- **Output:** `{ analysisId: string }`
-
-### GET /api/analysis/:id
-Retrieve analysis results
-- **Output:** AnalysisResult schema
-
-### GET /api/analysis/:id/pdf
-Download PDF brief
-- **Output:** PDF file (application/pdf)
-
-### GET /api/simulator
-Get simulator state with calculated metrics
-- **Query Params:** `approach` (standard|ai-optimized|minimal|full-verification), `market` (us|eu|uk|singapore|japan)
-- **Output:** SimulatorState schema with metrics, recommendations, impact analysis, and chart data
-
-## Key Design Decisions
-
-### 1. Citation Coverage
-Every regulatory statement includes a source chip with article/recital reference and URL. This builds trust and enables legal review.
-
-### 2. Deterministic Classification
-Use rules-based tier assignment instead of LLM inference to avoid hallucination. LLM only used for entity extraction (company name, sector, etc.).
-
-### 3. Confidence Tags
-All gaps and scenarios include High/Medium/Low confidence to signal certainty level to users.
-
-### 4. Fallback Data
-URL input uses pre-baked healthcare AI example to ensure demo reliability when actual URL fetching fails.
-
-### 5. In-Memory Storage
-Demo uses MemStorage for speed and simplicity. No database setup required for prototype.
-
-## Future Roadmap
-
-### Near-Term (Q1 2026)
-- Add GDPR and SEC crypto compliance frameworks
-- Implement 2-3 preset scenarios for comparison
-- Enhanced PDF styling and branding options
-
-### Medium-Term
-- Expert review workflow for critical flags
-- Simple authentication and analysis history
-- Fintech-specific templates (KYC/AML, model risk)
-
-### Long-Term Vision
-- Fund-with-software model using Dudilig as selection edge
-- Multi-framework coverage (HIPAA, SOC 2, etc.)
-- Portfolio-wide compliance monitoring
-
-## Development
-
-### Running Locally
-```bash
-npm install
-npm run dev
-```
-
-Application runs on port 5000 with Vite HMR for frontend.
-
-### Environment Variables
-- `AI_INTEGRATIONS_OPENAI_BASE_URL` - Automatically set by Replit
-- `AI_INTEGRATIONS_OPENAI_API_KEY` - Automatically set by Replit
-
-No manual API key configuration required when using Replit AI Integrations.
-
-## Target Users
-
-**Primary (Now):** VC associates and senior associates evaluating AI/health-data deals who need IC-ready briefs before partner review.
-
-**Secondary (Later):** Fintech/AI compliance teams (CCO, Head of Risk) using the simulator internally for regulatory planning.
-
-## Success Metrics
-
-### Demo Day Goals
-- Time-to-brief < 3 minutes ✓
-- 100% citation coverage ✓
-- 0 demo crashes ✓
-- 5+ design partner intros (target)
-- 2+ partners say brief would change deal terms (target)
+## Key Design Constraints (do not violate)
+1. **Don't break `/api/analyze` or `/analyze` UI** — production surface, paying-customer credibility depends on it
+2. **Don't replace the design system** — uses CSS custom properties from `globals.css`, not shadcn defaults
+3. **Don't introduce a database** for the 24-hour sprint — file-based JSON is fine
+4. **Don't fake the cryptographic hash** — must be real SHA-256 over a deterministic canonical payload
+5. **Public certificate route must be auth-free** — no login wall, no app chrome
 
 ## Notes
-
-- This is a demo/prototype build. Not production-ready without auth, rate limiting, and database persistence.
-- Uses Replit AI Integrations for OpenAI access (charges billed to Replit credits, no personal API key needed).
-- PDF generation uses Puppeteer when available, with graceful HTML fallback when system dependencies are missing. Users can print HTML to PDF from their browser.
-- All regulatory citations are accurate as of October 2025 but should be validated before real use.
-- Classification rules are deterministic and case-sensitive. Use exact wording from rules engine for accurate tier assignment (e.g., "Medical Diagnosis" for High-Risk healthcare AI).
-
-## Technical Implementation Details
-
-### Routing
-- **/** - Homepage with upload interface. Shows results inline after analysis.
-- **/analysis/:id** - Dedicated analysis results page accessible via direct URL.
-
-### PDF Export Behavior
-The PDF export gracefully handles environments with or without Puppeteer dependencies:
-- **With Puppeteer:** Generates true PDF files with proper formatting
-- **Without Puppeteer (Replit demo):** Returns formatted HTML that users can print to PDF via browser
-
-Both paths provide the same 1-page compliance brief content with all citations and formatting intact.
+- AGENTS.md and CLAUDE.md at repo root contain agent-specific instructions for the codebase
+- The user is Hersh Malik (CEO), applying to a16z Speedrun (apps due in <2 weeks). This sprint exists to strengthen that application by shipping the Trust Certificate flow as a clickable artifact.
