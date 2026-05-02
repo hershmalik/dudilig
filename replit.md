@@ -15,6 +15,22 @@ Dudilig is the AI-native compliance work platform for tokenized real-world asset
 
 ## Sprint Output (shipped)
 
+### In-app publish flow (May 2)
+- `app/(app)/analyze/page.tsx` — added "Publish as Trust Certificate" card that appears after a Claude analysis completes. Form fields: issuer name (required), token name (required), contract address (optional), network (optional). On success shows the new cert URL + hash + "Open certificate" button + "Publish another" reset.
+- `lib/storage/certificates.ts` — extracted `createCertificate()` helper that owns id generation, canonical hash payload, SHA-256 hashing, and disk write. Both the public POST endpoint and the in-app server action call this helper, so the canonical payload format stays in lockstep. Architect verified all 3 seeded cert hashes still match after refactor.
+- `app/api/certificates/route.ts` — refactored POST to delegate to `createCertificate()` (no behavior change; seeder still works).
+- **Anti-forgery via single-use analysis token (architect-flagged severe issue, fixed):**
+  - `lib/storage/analysis-cache.ts` — in-memory map keyed by 48-hex-char opaque tokens, 30-min TTL, 500-entry cap with FIFO eviction, single-use (consume = delete).
+  - `app/api/analyze/route.ts` — issues a fresh `analysisToken` on every successful analysis, also caps `code` at 60KB before burning a Claude call.
+  - `app/(app)/analyze/actions.ts` — Server Action `saveAnalysisAsCertificate` accepts only the token + presentation fields. Looks up the trusted analysis server-side via `consumeAnalysis(token)`. The client cannot supply or modify the analysis content. Same field-byte caps as the public POST endpoint.
+  - Why this matters: the `(app)/` routes have no auth gate. Without this, a malicious visitor could open devtools, mutate the analysis to a forged "PASS", and mint a Dudilig-signed certificate that lies about the contract. With the token, the analysis is server-controlled.
+  - Bonus side effect: each publish requires first running a real Claude call (to mint a token), which is a natural cost-based rate limit on abuse.
+- API smoke tests verified: `/api/analyze` returns valid 48-hex token + analysis; legacy `/api/certificates` POST path still creates certs for the seeder; `/trust/[id]` renders 200; oversized contracts (>60KB) are rejected before Claude.
+- **Streaming body-size guard (architect-flagged DoS, fixed):**
+  - `lib/http/read-body.ts` — `readBodyText(req, maxBytes)` streams the body with a running byte counter and cancels the reader the instant the cap is exceeded. Closes the chunked / no-Content-Length DoS path that `req.text()`/`req.json()` (which buffer the entire body before any check) leave open.
+  - Applied to both `POST /api/analyze` (100KB body cap) and `POST /api/certificates` (100KB body cap). Verified via curl: oversized bodies are rejected with HTTP 413 in both Content-Length and Transfer-Encoding: chunked modes.
+  - `app/(app)/analyze/actions.ts` — added 4KB serialized cap on `claimedFacts` to prevent nested-object abuse on the in-app publish path.
+
 ### Hardening fixes (post-architect-review)
 - `lib/crypto/hash.ts` — `canonicalize()` now matches `JSON.stringify` semantics for non-serializable values: `undefined` in arrays → `null`; `undefined` object values omitted; functions/symbols treated like undefined. Determinism across key order verified.
 - `lib/storage/certificates.ts` — `getCertificate()` returns `null` for malformed ids (was throwing) so invalid `/trust/<bad>` URLs render Next's 404 instead of a 500.

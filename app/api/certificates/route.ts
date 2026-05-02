@@ -5,12 +5,11 @@ import {
   type ComplianceStandard,
 } from "@/lib/services/analyze-claude"
 import {
-  newCertificateId,
-  saveCertificate,
+  createCertificate,
   listCertificates,
 } from "@/lib/storage/certificates"
-import { attestationHash } from "@/lib/crypto/hash"
-import type { Certificate, CertificateInput } from "@/lib/types/certificate"
+import type { CertificateInput } from "@/lib/types/certificate"
+import { readBodyText } from "@/lib/http/read-body"
 
 export async function GET() {
   const summaries = await listCertificates()
@@ -39,9 +38,11 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Cap raw body size before parsing.
-  const lengthHeader = req.headers.get("content-length")
-  if (lengthHeader && parseInt(lengthHeader, 10) > 100_000) {
+  // Stream-read with a hard byte cap. Aborts the read the moment we
+  // exceed the cap so a chunked / no-Content-Length attacker cannot
+  // force unbounded memory allocation.
+  const read = await readBodyText(req, 100_000)
+  if (read.tooLarge) {
     return NextResponse.json(
       { error: "Request body too large" },
       { status: 413 }
@@ -50,7 +51,7 @@ export async function POST(req: NextRequest) {
 
   let body: Partial<CertificateInput>
   try {
-    body = await req.json()
+    body = JSON.parse(read.text)
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 })
   }
@@ -114,29 +115,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: message }, { status: 500 })
   }
 
-  const id = newCertificateId()
-  const createdAt = new Date().toISOString()
-
-  // Canonical payload that the hash covers. Deterministic — anyone
-  // can re-derive the same hash from the same inputs + outputs.
-  const hashPayload = {
-    id,
-    issuerName,
-    tokenName,
-    standard,
-    standardName,
-    contractAddress: contractAddress ?? null,
-    network: network ?? null,
-    claimedFacts: claimedFacts ?? {},
-    contractCode,
-    analysis,
-    createdAt,
-  }
-
-  const hash = attestationHash(hashPayload)
-
-  const certificate: Certificate = {
-    id,
+  const certificate = await createCertificate({
     issuerName,
     tokenName,
     standard: standard as ComplianceStandard,
@@ -146,16 +125,12 @@ export async function POST(req: NextRequest) {
     claimedFacts: claimedFacts ?? {},
     contractCode,
     analysis,
-    hash,
-    createdAt,
-  }
-
-  await saveCertificate(certificate)
+  })
 
   return NextResponse.json({
-    id,
-    hash,
-    url: `/trust/${id}`,
+    id: certificate.id,
+    hash: certificate.hash,
+    url: `/trust/${certificate.id}`,
     overallStatus: analysis.overallStatus,
     score: analysis.score,
   })

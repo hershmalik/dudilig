@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { TopBar } from "@/components/layout/TopBar"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -16,8 +17,11 @@ import {
   ChevronDown,
   ChevronUp,
   Sparkles,
+  ShieldCheck,
+  ExternalLink,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { saveAnalysisAsCertificate } from "./actions"
 
 const STANDARDS = [
   { id: "reg-d-506c", label: "Reg D 506(c)", desc: "US accredited investors" },
@@ -90,12 +94,25 @@ export default function AnalyzePage() {
   const [expandedRules, setExpandedRules] = useState<Set<number>>(new Set())
   const [copied, setCopied] = useState(false)
 
+  // Publish-as-Trust-Certificate state
+  const [analysisToken, setAnalysisToken] = useState("")
+  const [issuerName, setIssuerName] = useState("")
+  const [tokenName, setTokenName] = useState("")
+  const [contractAddress, setContractAddress] = useState("")
+  const [network, setNetwork] = useState("")
+  const [publishing, setPublishing] = useState(false)
+  const [publishError, setPublishError] = useState("")
+  const [publishedCert, setPublishedCert] = useState<{ url: string; hash: string } | null>(null)
+
   async function runAnalysis() {
     if (!code.trim()) return
     setLoading(true)
     setResult(null)
     setError("")
     setExpandedRules(new Set())
+    setPublishError("")
+    setPublishedCert(null)
+    setAnalysisToken("")
 
     try {
       const res = await fetch("/api/analyze", {
@@ -109,11 +126,38 @@ export default function AnalyzePage() {
       } else {
         setResult(data.analysis)
         setStandardName(data.standard)
+        setAnalysisToken(data.analysisToken ?? "")
       }
     } catch {
       setError("Network error. Please try again.")
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function publishCertificate() {
+    if (!result || !issuerName.trim() || !tokenName.trim() || !analysisToken) return
+    setPublishing(true)
+    setPublishError("")
+    setPublishedCert(null)
+    try {
+      const res = await saveAnalysisAsCertificate({
+        analysisToken,
+        issuerName,
+        tokenName,
+        contractAddress: contractAddress || undefined,
+        network: network || undefined,
+      })
+      if (res.ok) {
+        setPublishedCert({ url: res.url, hash: res.hash })
+        setAnalysisToken("") // single-use; clear so the button disables
+      } else {
+        setPublishError(res.error)
+      }
+    } catch {
+      setPublishError("Failed to publish certificate. Please try again.")
+    } finally {
+      setPublishing(false)
     }
   }
 
@@ -379,6 +423,165 @@ export default function AnalyzePage() {
                     </div>
                   </Card>
                 )}
+
+                {/* Publish as Trust Certificate */}
+                <Card className="p-6">
+                  <div className="flex items-start gap-3 mb-4">
+                    <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                      <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-slate-200">Publish as Trust Certificate</p>
+                      <p className="text-xs text-slate-500 mt-1">
+                        Save this analysis as a public, signed certificate with a permanent shareable URL.
+                        No login required to view. The cryptographic hash is computed from the canonical
+                        contract + claims + analysis payload.
+                      </p>
+                    </div>
+                  </div>
+
+                  {!publishedCert ? (
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-medium text-slate-400 mb-1.5" htmlFor="publish-issuer">
+                            Issuer name <span className="text-red-400">*</span>
+                          </label>
+                          <input
+                            id="publish-issuer"
+                            data-testid="input-issuer-name"
+                            type="text"
+                            value={issuerName}
+                            onChange={e => setIssuerName(e.target.value)}
+                            placeholder="e.g. Meridian Capital LLC"
+                            maxLength={200}
+                            className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-200 placeholder-slate-700 focus:outline-none focus:border-violet-600 transition-colors"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-slate-400 mb-1.5" htmlFor="publish-token">
+                            Token name <span className="text-red-400">*</span>
+                          </label>
+                          <input
+                            id="publish-token"
+                            data-testid="input-token-name"
+                            type="text"
+                            value={tokenName}
+                            onChange={e => setTokenName(e.target.value)}
+                            placeholder="e.g. Meridian Private Credit Fund I"
+                            maxLength={200}
+                            className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-200 placeholder-slate-700 focus:outline-none focus:border-violet-600 transition-colors"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-slate-400 mb-1.5" htmlFor="publish-address">
+                            Contract address <span className="text-slate-600">(optional)</span>
+                          </label>
+                          <input
+                            id="publish-address"
+                            data-testid="input-contract-address"
+                            type="text"
+                            value={contractAddress}
+                            onChange={e => setContractAddress(e.target.value)}
+                            placeholder="0x..."
+                            maxLength={200}
+                            className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs font-mono text-slate-200 placeholder-slate-700 focus:outline-none focus:border-violet-600 transition-colors"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-slate-400 mb-1.5" htmlFor="publish-network">
+                            Network <span className="text-slate-600">(optional)</span>
+                          </label>
+                          <input
+                            id="publish-network"
+                            data-testid="input-network"
+                            type="text"
+                            value={network}
+                            onChange={e => setNetwork(e.target.value)}
+                            placeholder="e.g. Ethereum, Polygon, Base"
+                            maxLength={200}
+                            className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-200 placeholder-slate-700 focus:outline-none focus:border-violet-600 transition-colors"
+                          />
+                        </div>
+                      </div>
+
+                      {publishError && (
+                        <div className="flex items-start gap-2 bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+                          <XCircle className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+                          <p className="text-xs text-red-300">{publishError}</p>
+                        </div>
+                      )}
+
+                      <div className="flex justify-end pt-1">
+                        <button
+                          onClick={publishCertificate}
+                          disabled={
+                            publishing ||
+                            !issuerName.trim() ||
+                            !tokenName.trim() ||
+                            !analysisToken
+                          }
+                          data-testid="button-publish-certificate"
+                          className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-medium rounded-lg transition-colors"
+                        >
+                          {publishing ? (
+                            <>
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              Publishing...
+                            </>
+                          ) : (
+                            <>
+                              <ShieldCheck className="w-3.5 h-3.5" />
+                              Publish Certificate
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-3" data-testid="status-certificate-published">
+                      <div className="flex items-start gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium text-emerald-300">Certificate published</p>
+                          <p className="text-xs text-slate-400 mt-1 break-all">
+                            <span className="text-slate-500">URL:</span>{" "}
+                            <code className="text-emerald-400">{publishedCert.url}</code>
+                          </p>
+                          <p className="text-xs text-slate-400 mt-1 break-all">
+                            <span className="text-slate-500">Hash:</span>{" "}
+                            <code className="text-violet-400 text-[10px]">{publishedCert.hash}</code>
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <Link
+                          href={publishedCert.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          data-testid="link-view-certificate"
+                          className="flex items-center gap-1.5 px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white text-xs font-medium rounded-lg transition-colors"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          Open certificate
+                        </Link>
+                        <button
+                          onClick={() => {
+                            setPublishedCert(null)
+                            setIssuerName("")
+                            setTokenName("")
+                            setContractAddress("")
+                            setNetwork("")
+                          }}
+                          data-testid="button-publish-another"
+                          className="px-4 py-2 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-medium rounded-lg transition-colors"
+                        >
+                          Publish another
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </Card>
               </>
             )}
           </div>

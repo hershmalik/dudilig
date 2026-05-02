@@ -4,9 +4,32 @@ import {
   type ComplianceStandard,
   STANDARD_RULES,
 } from "@/lib/services/analyze-claude"
+import { storeAnalysis } from "@/lib/storage/analysis-cache"
+import { readBodyText } from "@/lib/http/read-body"
+
+const MAX_BODY_BYTES = 100_000
+const MAX_CODE_BYTES = 60_000
 
 export async function POST(req: NextRequest) {
-  const { code, standard } = await req.json()
+  // Stream-read with a hard byte cap. Aborts the read the moment we
+  // exceed the cap so a chunked / no-Content-Length attacker cannot
+  // force unbounded memory allocation.
+  const read = await readBodyText(req, MAX_BODY_BYTES)
+  if (read.tooLarge) {
+    return NextResponse.json(
+      { error: "Request body too large" },
+      { status: 413 }
+    )
+  }
+
+  let body: { code?: unknown; standard?: unknown }
+  try {
+    body = JSON.parse(read.text)
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 })
+  }
+
+  const { code, standard } = body
 
   if (!code || !standard) {
     return NextResponse.json(
@@ -15,8 +38,15 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  if (!(standard in STANDARD_RULES)) {
+  if (typeof standard !== "string" || !(standard in STANDARD_RULES)) {
     return NextResponse.json({ error: "Unknown standard" }, { status: 400 })
+  }
+
+  if (typeof code !== "string" || Buffer.byteLength(code, "utf8") > MAX_CODE_BYTES) {
+    return NextResponse.json(
+      { error: `Contract code exceeds ${MAX_CODE_BYTES} bytes` },
+      { status: 413 }
+    )
   }
 
   try {
@@ -24,7 +54,22 @@ export async function POST(req: NextRequest) {
       code,
       standard: standard as ComplianceStandard,
     })
-    return NextResponse.json({ analysis, standard: standardName })
+
+    // Mint a single-use token that the in-app publish flow can present
+    // to prove "this analysis came from the server, not from a tampered
+    // client". Token is opaque to the browser.
+    const analysisToken = storeAnalysis({
+      analysis,
+      standard: standard as ComplianceStandard,
+      standardName,
+      contractCode: code,
+    })
+
+    return NextResponse.json({
+      analysis,
+      standard: standardName,
+      analysisToken,
+    })
   } catch (err) {
     const message = err instanceof Error ? err.message : "Analysis failed"
     return NextResponse.json({ error: message }, { status: 500 })
