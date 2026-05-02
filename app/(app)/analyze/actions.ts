@@ -72,7 +72,7 @@ export async function saveAnalysisAsCertificate(
   // Look up the server-stored analysis. Returns null if the token is
   // unknown, expired (>30min), already used, or malformed. This is the
   // anti-forgery boundary: the client cannot synthesize a trusted analysis.
-  const cached = consumeAnalysis(input.analysisToken)
+  const cached = await consumeAnalysis(input.analysisToken)
   if (!cached) {
     return {
       ok: false,

@@ -57,8 +57,10 @@ export async function POST(req: NextRequest) {
 
     // Mint a single-use token that the in-app publish flow can present
     // to prove "this analysis came from the server, not from a tampered
-    // client". Token is opaque to the browser.
-    const analysisToken = storeAnalysis({
+    // client". Token is opaque to the browser. Persisted to disk so it
+    // survives Next.js bundling the API route and the Server Action into
+    // separate chunks (which would each get their own in-memory copy).
+    const analysisToken = await storeAnalysis({
       analysis,
       standard: standard as ComplianceStandard,
       standardName,
