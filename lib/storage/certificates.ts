@@ -2,9 +2,13 @@ import { promises as fs } from "node:fs"
 import path from "node:path"
 import { randomBytes } from "node:crypto"
 import type {
+  AnalysisResult,
   Certificate,
   CertificateSummary,
+  ClaimedFacts,
 } from "@/lib/types/certificate"
+import type { ComplianceStandard } from "@/lib/services/analyze-claude"
+import { attestationHash } from "@/lib/crypto/hash"
 
 const DATA_DIR = path.join(process.cwd(), "data", "certificates")
 
@@ -36,6 +40,61 @@ function certPath(id: string): string {
 export async function saveCertificate(cert: Certificate): Promise<void> {
   await ensureDir()
   await fs.writeFile(certPath(cert.id), JSON.stringify(cert, null, 2), "utf8")
+}
+
+/**
+ * High-level helper: generate a fresh id + canonical SHA-256 hash and
+ * persist the certificate. Used by both the public POST endpoint and
+ * the in-app server action so the canonical payload format and hash
+ * algorithm stay in lockstep.
+ */
+export async function createCertificate(args: {
+  issuerName: string
+  tokenName: string
+  standard: ComplianceStandard
+  standardName: string
+  contractAddress?: string
+  network?: string
+  claimedFacts: ClaimedFacts
+  contractCode: string
+  analysis: AnalysisResult
+}): Promise<Certificate> {
+  const id = newCertificateId()
+  const createdAt = new Date().toISOString()
+
+  const hashPayload = {
+    id,
+    issuerName: args.issuerName,
+    tokenName: args.tokenName,
+    standard: args.standard,
+    standardName: args.standardName,
+    contractAddress: args.contractAddress ?? null,
+    network: args.network ?? null,
+    claimedFacts: args.claimedFacts ?? {},
+    contractCode: args.contractCode,
+    analysis: args.analysis,
+    createdAt,
+  }
+
+  const hash = attestationHash(hashPayload)
+
+  const cert: Certificate = {
+    id,
+    issuerName: args.issuerName,
+    tokenName: args.tokenName,
+    standard: args.standard,
+    standardName: args.standardName,
+    contractAddress: args.contractAddress,
+    network: args.network,
+    claimedFacts: args.claimedFacts ?? {},
+    contractCode: args.contractCode,
+    analysis: args.analysis,
+    hash,
+    createdAt,
+  }
+
+  await saveCertificate(cert)
+  return cert
 }
 
 export async function getCertificate(id: string): Promise<Certificate | null> {
