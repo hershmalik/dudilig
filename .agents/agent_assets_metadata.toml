@@ -1,0 +1,14 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "T2v1QlWzXTf8SpbrD2lQA"
+uri = "file://docs/screenshots/og-pass.png"
+type = "image"
+title = "OG image — Pass certificate"
+
+[[outputs]]
+id = "uzm5_WZTo-104H08DKI7D"
+uri = "file://docs/screenshots/og-fail.png"
+type = "image"
+title = "OG image — Mismatch certificate"
