@@ -20,7 +20,7 @@ Dudilig is the AI-native compliance work platform for tokenized real-world asset
 - `lib/storage/certificates.ts` — extracted `createCertificate()` helper that owns id generation, canonical hash payload, SHA-256 hashing, and disk write. Both the public POST endpoint and the in-app server action call this helper, so the canonical payload format stays in lockstep. Architect verified all 3 seeded cert hashes still match after refactor.
 - `app/api/certificates/route.ts` — refactored POST to delegate to `createCertificate()` (no behavior change; seeder still works).
 - **Anti-forgery via single-use analysis token (architect-flagged severe issue, fixed):**
-  - `lib/storage/analysis-cache.ts` — in-memory map keyed by 48-hex-char opaque tokens, 30-min TTL, 500-entry cap with FIFO eviction, single-use (consume = delete).
+  - `lib/storage/analysis-cache.ts` — **disk-backed** store (`data/analysis-tokens/{token}.json`) keyed by 48-hex-char opaque tokens, 30-min TTL, 500-entry cap with mtime-based eviction, single-use (consume = unlink). Disk (not in-memory) because Next.js bundles the API route handler and the Server Action into separate JS chunks; each chunk gets its own copy of any module-level state, so an in-memory `Map` is empty when the Server Action looks up a token written by the API route. This was the root cause of the production "Analysis expired or already published" bug seen on first deploy.
   - `app/api/analyze/route.ts` — issues a fresh `analysisToken` on every successful analysis, also caps `code` at 60KB before burning a Claude call.
   - `app/(app)/analyze/actions.ts` — Server Action `saveAnalysisAsCertificate` accepts only the token + presentation fields. Looks up the trusted analysis server-side via `consumeAnalysis(token)`. The client cannot supply or modify the analysis content. Same field-byte caps as the public POST endpoint.
   - Why this matters: the `(app)/` routes have no auth gate. Without this, a malicious visitor could open devtools, mutate the analysis to a forged "PASS", and mint a Dudilig-signed certificate that lies about the contract. With the token, the analysis is server-controlled.
@@ -37,6 +37,13 @@ Dudilig is the AI-native compliance work platform for tokenized real-world asset
 - `app/api/certificates/route.ts` (POST) — added: optional `CERT_API_TOKEN` env / `X-Cert-Token` header gate (when env unset, endpoint stays open for dev/seeder), 100KB body cap, 60KB contractCode cap, 1KB caps on text fields. Closes the cost-amplification + disk-fill DoS surface flagged by the architect.
 - `scripts/seed-certificates.ts` — sends `X-Cert-Token` header when `CERT_API_TOKEN` is set in env.
 - `components/trust/TrustCertificate.tsx` — rule findings panel defaults to OPEN (better demo UX, also fixes flaky e2e click-toggle).
+
+### Bugfix (May 2, post-first-deploy)
+- Symptom: on `dudilig.replit.app/analyze`, every publish attempt returned "Analysis expired or already published" even on the first try after a fresh analysis.
+- Root cause: `lib/storage/analysis-cache.ts` used a module-level `Map`. Next.js production bundling places `app/api/analyze/route.ts` and `app/(app)/analyze/actions.ts` in separate output chunks, so each got its own empty Map instance. The token written by `/api/analyze` was never visible to the Server Action.
+- Fix: `lib/storage/analysis-cache.ts` rewritten to persist tokens as `data/analysis-tokens/{token}.json`. `storeAnalysis` and `consumeAnalysis` are now async; both callers updated. `data/analysis-tokens/` added to `.gitignore` (transient state, not source).
+- Verified: end-to-end smoke test confirms token round-trips API → disk → Server Action, second consume returns null, file unlinked after first read.
+- Concurrency hardening (architect-flagged): single-use is enforced via atomic POSIX `rename` in `consumeAnalysis` — the file is renamed to `.claim-{nonce}` BEFORE reading, so under N concurrent consumes of the same token, exactly one rename wins (others get ENOENT and return null). Verified with 10-way parallel consume test: 1/10 succeed. Closes the duplicate-mint race the previous fire-and-forget unlink left open.
 
 ### Production env (Render) — set this
 - `CERT_API_TOKEN` — any random string. Required to gate public POST submissions.
