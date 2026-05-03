@@ -196,25 +196,11 @@ export default function HeroSection({ showcase }: { showcase: Certificate[] }) {
           <span className="text-gradient-accent font-serif italic">Tokenized Assets</span>
         </motion.h1>
 
-        {/* Subtitle */}
-        <motion.p
-          variants={itemVariants}
-          style={{
-            marginTop: 20,
-            fontSize: 15,
-            lineHeight: 1.55,
-            color: "rgba(255,255,255,0.45)",
-            maxWidth: 540,
-          }}
-        >
-          KYC, smart contract attestation, and regulatory filings — generated and verified by AI agents reading the actual contract.
-        </motion.p>
-
         {/* CTAs */}
         <motion.div
           variants={itemVariants}
           className="flex flex-wrap items-center justify-center gap-3"
-          style={{ marginTop: 32 }}
+          style={{ marginTop: 40 }}
         >
           <Link
             href="/login"
