@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import type { Certificate } from "@/lib/types/certificate";
+import MeshCanvas from "./MeshCanvas";
 
 const POWER4_OUT: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
 
@@ -140,7 +141,7 @@ export default function HeroSection({ showcase }: { showcase: Certificate[] }) {
       className="relative min-h-screen w-full overflow-hidden"
       style={{ background: "#08080a", color: "#ffffff" }}
     >
-      <div className="absolute inset-0 bg-grid-soft pointer-events-none" />
+      <MeshCanvas />
       <div className="absolute inset-0 hero-radial pointer-events-none" />
 
       <header className="absolute top-8 left-8 z-20">
