@@ -144,7 +144,7 @@ export default function HeroSection({ showcase }: { showcase: Certificate[] }) {
       <MeshCanvas />
       <div className="absolute inset-0 hero-radial pointer-events-none" />
 
-      <header className="absolute top-8 left-8 z-20">
+      <header className="absolute top-4 left-4 sm:top-8 sm:left-8 z-20">
         <BrandMark />
       </header>
 
@@ -152,7 +152,7 @@ export default function HeroSection({ showcase }: { showcase: Certificate[] }) {
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="relative z-10 mx-auto max-w-5xl px-6 pt-28 sm:pt-36 pb-12 flex flex-col items-center text-center"
+        className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 pt-24 sm:pt-36 pb-12 flex flex-col items-center text-center"
       >
         {/* Badge */}
         <motion.div variants={itemVariants}>
@@ -185,7 +185,7 @@ export default function HeroSection({ showcase }: { showcase: Certificate[] }) {
           className="font-serif"
           style={{
             marginTop: 28,
-            fontSize: "clamp(3rem, 7.5vw, 6rem)",
+            fontSize: "clamp(2.25rem, 9vw, 6rem)",
             fontWeight: 500,
             lineHeight: 1,
             letterSpacing: "-0.02em",

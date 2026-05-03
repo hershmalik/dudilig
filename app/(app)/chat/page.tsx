@@ -208,7 +208,7 @@ export default function ChatPage() {
   const showSuggestions = introDone && messages.filter((m) => m.role === "user").length === 0
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-full">
       <TopBar
         title="Mike, Compliance Copilot"
         subtitle="Reads your workspace. Cites the data. Answers in plain English."

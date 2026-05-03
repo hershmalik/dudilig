@@ -26,10 +26,10 @@ export default function TokensPage() {
         subtitle={`${tokens.length} active tokens · ${formatCurrency(tokens.reduce((s, t) => s + t.totalRaise, 0))} total AUM`}
       />
 
-      <div className="p-8 space-y-4">
+      <div className="p-4 sm:p-8 space-y-4">
         {tokens.map(token => (
-          <Card key={token.id} className="p-6">
-            <div className="flex items-start gap-6">
+          <Card key={token.id} className="p-4 sm:p-6">
+            <div className="flex flex-col lg:flex-row lg:items-start gap-6">
               {/* Left: meta */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-2">
@@ -39,10 +39,10 @@ export default function TokensPage() {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-4 mb-4">
+                <div className="flex items-center flex-wrap gap-x-4 gap-y-1 mb-4">
                   <p className="text-xs text-[var(--text-tertiary)]">{token.jurisdiction}</p>
-                  <span className="text-[var(--text-tertiary)]">·</span>
-                  <p className="text-xs font-mono text-[var(--text-tertiary)]">{token.contractAddress.slice(0, 18)}...</p>
+                  <span className="text-[var(--text-tertiary)] hidden sm:inline">·</span>
+                  <p className="text-xs font-mono text-[var(--text-tertiary)] truncate max-w-full">{token.contractAddress.slice(0, 18)}...</p>
                   <a
                     href="#"
                     className="text-xs text-[var(--accent-blue)] hover:text-[var(--accent-blue)] flex items-center gap-1"
@@ -51,7 +51,7 @@ export default function TokensPage() {
                   </a>
                 </div>
 
-                <div className="grid grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                   <div>
                     <p className="text-xs text-[var(--text-tertiary)] mb-1">Total Raise</p>
                     <p className="text-sm font-semibold text-[var(--text-primary)]">{formatCurrency(token.totalRaise)}</p>
@@ -79,7 +79,7 @@ export default function TokensPage() {
               </div>
 
               {/* Right: status panel */}
-              <div className="shrink-0 w-56 space-y-4">
+              <div className="shrink-0 w-full lg:w-56 space-y-4 lg:border-l-0 border-t lg:border-t-0 border-[var(--rule)] pt-4 lg:pt-0">
                 {/* Compliance score */}
                 <div>
                   <div className="flex items-center justify-between mb-2">

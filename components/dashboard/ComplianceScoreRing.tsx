@@ -16,7 +16,7 @@ export function ComplianceScoreRing({ score }: ComplianceScoreRingProps) {
   const label = score >= 80 ? "Strong" : score >= 60 ? "Moderate" : "At Risk"
 
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
       <div className="relative w-28 h-28" style={{ minWidth: 112, minHeight: 112 }}>
         <ResponsiveContainer width={112} height={112}>
           <RadialBarChart
@@ -36,11 +36,11 @@ export function ComplianceScoreRing({ score }: ComplianceScoreRingProps) {
           <span className="text-xs text-[var(--text-tertiary)]">/ 100</span>
         </div>
       </div>
-      <div>
+      <div className="text-center sm:text-left">
         <p className="text-sm font-medium" style={{ color }}>{label}</p>
         <p className="text-xs text-[var(--text-tertiary)] mt-1">Overall compliance</p>
         <p className="text-xs text-[var(--text-tertiary)]">health score</p>
-        <div className="mt-3 space-y-1">
+        <div className="mt-3 space-y-1 inline-block text-left">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-[var(--accent-green)]" />
             <span className="text-xs text-[var(--text-muted)]">KYC: 96%</span>

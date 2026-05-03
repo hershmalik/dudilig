@@ -223,7 +223,7 @@ export default function AnalyzePage() {
             {/* Standard selector */}
             <Card className="p-4">
               <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider mb-3">Compliance Standard</p>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {STANDARDS.map(s => (
                   <button
                     key={s.id}

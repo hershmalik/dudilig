@@ -147,7 +147,7 @@ export function TopBar({ title, subtitle, action }: TopBarProps) {
               role="menu"
               aria-label="Notifications"
               data-testid="panel-notifications"
-              className="absolute right-0 mt-2 w-[360px] sm:w-[400px] rounded-2xl overflow-hidden shadow-2xl animate-fade-in-up"
+              className="absolute right-0 mt-2 w-[calc(100vw-32px)] max-w-[400px] sm:w-[400px] rounded-2xl overflow-hidden shadow-2xl animate-fade-in-up"
               style={{
                 background: "var(--bg-elevated)",
                 border: "1px solid var(--rule-strong)",
