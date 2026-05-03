@@ -121,7 +121,7 @@ export default async function Home() {
                 className="w-1.5 h-1.5 rounded-full animate-pulse-soft"
                 style={{ background: "var(--accent-green)" }}
               />
-              Agentic Compliance OS
+              Agentic Due Diligence
             </div>
           </div>
 
