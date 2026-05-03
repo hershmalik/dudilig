@@ -11,10 +11,13 @@ import {
   ExternalLink,
   ChevronDown,
   ChevronUp,
+  Check,
+  X,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import type { Certificate } from "@/lib/types/certificate"
 import { useEffect, useState } from "react"
+import { HashVerifier } from "./HashVerifier"
 
 interface TrustCertificateProps {
   certificate: Certificate
@@ -564,6 +567,12 @@ export function TrustCertificate({ certificate, embed = false }: TrustCertificat
               </p>
             </div>
           </div>
+          {!embed && (
+            <HashVerifier
+              certificateId={certificate.id}
+              expectedHash={certificate.hash}
+            />
+          )}
         </div>
 
         {/* Plain language explainer */}
@@ -582,12 +591,109 @@ export function TrustCertificate({ certificate, embed = false }: TrustCertificat
             allocators, and regulators can verify this attestation without
             reading the contract themselves.
           </p>
+        </div>
+
+        {/* Scope of trust — what this proves vs does not prove */}
+        <div
+          className="px-6 sm:px-8 py-6 border-b"
+          style={{ borderColor: "var(--rule)" }}
+          data-testid="section-scope-of-trust"
+        >
+          <p className="fig-label mb-4">Scope of trust</p>
+          <div className="grid sm:grid-cols-2 gap-x-6 gap-y-5">
+            <div>
+              <p
+                className="text-xs uppercase tracking-wider font-medium mb-3 flex items-center gap-1.5"
+                style={{ color: "var(--accent-green)" }}
+              >
+                <Check className="w-3.5 h-3.5" />
+                What this proves
+              </p>
+              <ul
+                className="space-y-2 text-xs leading-relaxed"
+                style={{ color: "var(--text-muted)" }}
+              >
+                <li className="flex gap-2">
+                  <span style={{ color: "var(--accent-green)" }}>•</span>
+                  <span>
+                    The exact contract source and claims shown above were
+                    submitted to and analyzed by Dudilig's Claude Opus 4.5
+                    auditor at the timestamp listed.
+                  </span>
+                </li>
+                <li className="flex gap-2">
+                  <span style={{ color: "var(--accent-green)" }}>•</span>
+                  <span>
+                    The findings are deterministically committed by the SHA-256
+                    hash. Anyone can re-fetch the raw JSON and recompute the
+                    hash to confirm the analysis has not been altered.
+                  </span>
+                </li>
+                <li className="flex gap-2">
+                  <span style={{ color: "var(--accent-green)" }}>•</span>
+                  <span>
+                    Dudilig is publicly accountable for this attestation. The
+                    URL is permanent and viewable without an account.
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <p
+                className="text-xs uppercase tracking-wider font-medium mb-3 flex items-center gap-1.5"
+                style={{ color: "var(--accent-amber, #f59e0b)" }}
+              >
+                <X className="w-3.5 h-3.5" />
+                What this does not prove
+              </p>
+              <ul
+                className="space-y-2 text-xs leading-relaxed"
+                style={{ color: "var(--text-muted)" }}
+              >
+                <li className="flex gap-2">
+                  <span style={{ color: "var(--text-tertiary)" }}>•</span>
+                  <span>
+                    That the contract is deployed at the address shown, or that
+                    the on-chain bytecode matches the source analyzed. No RPC
+                    bytecode verification is performed in v1.
+                  </span>
+                </li>
+                <li className="flex gap-2">
+                  <span style={{ color: "var(--text-tertiary)" }}>•</span>
+                  <span>
+                    Cryptographic asymmetric signing or on-chain anchoring. The
+                    attestation is hash-committed but not yet signed by a
+                    Dudilig key or anchored via EAS — both planned for v2.
+                  </span>
+                </li>
+                <li className="flex gap-2">
+                  <span style={{ color: "var(--text-tertiary)" }}>•</span>
+                  <span>
+                    Legal or regulatory approval. This is an LLM-generated
+                    structural review, not a law-firm opinion or accreditation
+                    by a regulator.
+                  </span>
+                </li>
+                <li className="flex gap-2">
+                  <span style={{ color: "var(--text-tertiary)" }}>•</span>
+                  <span>
+                    Identity of the issuer. The issuer name is self-declared
+                    and not KYB-verified at publish time.
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
           <p
-            className="text-xs mt-3"
-            style={{ color: "var(--text-tertiary)" }}
+            className="text-xs mt-5 pt-4 border-t"
+            style={{
+              color: "var(--text-tertiary)",
+              borderColor: "var(--rule)",
+            }}
           >
-            This is not legal advice. Continuous attestation, on-chain anchoring,
-            and human review workflows are part of the full Dudilig platform.
+            Continuous attestation, on-chain anchoring via EAS, and RPC
+            bytecode verification are on the Dudilig roadmap. This certificate
+            is not legal advice.
           </p>
         </div>
 
