@@ -6,3 +6,4 @@ vite.config.ts.*
 *.tar.gz
 # Transient analysis tokens (single-use, 30min TTL)
 data/analysis-tokens/
+.next/
