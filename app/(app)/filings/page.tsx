@@ -36,21 +36,21 @@ export default function FilingsPage() {
             return (
               <Card key={status} className="p-4 flex items-center gap-3">
                 <div className={`p-2 rounded-lg ${
-                  status === "submitted" ? "bg-emerald-500/10" :
-                  status === "overdue" ? "bg-red-500/10" :
-                  status === "in_progress" ? "bg-violet-500/10" :
-                  "bg-slate-800"
+                  status === "submitted" ? "bg-[rgba(74,222,128,0.10)]" :
+                  status === "overdue" ? "bg-[rgba(239,68,68,0.10)]" :
+                  status === "in_progress" ? "bg-[rgba(59,130,246,0.10)]" :
+                  "bg-[rgba(247,244,237,0.06)]"
                 }`}>
                   <Icon className={`w-4 h-4 ${
-                    status === "submitted" ? "text-emerald-400" :
-                    status === "overdue" ? "text-red-400" :
-                    status === "in_progress" ? "text-violet-400" :
-                    "text-slate-400"
+                    status === "submitted" ? "text-[var(--accent-green)]" :
+                    status === "overdue" ? "text-[var(--accent-red)]" :
+                    status === "in_progress" ? "text-[var(--accent-blue)]" :
+                    "text-[var(--text-muted)]"
                   }`} />
                 </div>
                 <div>
-                  <p className="text-xl font-bold text-slate-50">{items.length}</p>
-                  <p className="text-xs text-slate-500">{cfg.label}</p>
+                  <p className="text-xl font-bold text-[var(--text-primary)]">{items.length}</p>
+                  <p className="text-xs text-[var(--text-tertiary)]">{cfg.label}</p>
                 </div>
               </Card>
             )
@@ -59,10 +59,10 @@ export default function FilingsPage() {
 
         {/* Filings table */}
         <Card>
-          <div className="px-6 py-4 border-b border-slate-800">
-            <p className="text-sm font-medium text-slate-200">All Filings</p>
+          <div className="px-6 py-4 border-b border-[var(--rule)]">
+            <p className="text-sm font-medium text-[var(--text-primary)]">All Filings</p>
           </div>
-          <div className="divide-y divide-slate-800">
+          <div className="divide-y divide-[var(--rule)]">
             {filings
               .sort((a, b) => {
                 const order = { overdue: 0, in_progress: 1, not_started: 2, submitted: 3 }
@@ -75,28 +75,28 @@ export default function FilingsPage() {
                 const isUrgent = days <= 14 && days >= 0
 
                 return (
-                  <div key={filing.id} className="px-6 py-5 hover:bg-slate-800/30 transition-colors">
+                  <div key={filing.id} className="px-6 py-5 hover:bg-[rgba(247,244,237,0.06)]/30 transition-colors">
                     <div className="flex items-start gap-4">
                       <div className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold ${
-                        isOverdue ? "bg-red-500/10 text-red-400" :
-                        isUrgent ? "bg-amber-500/10 text-amber-400" :
-                        filing.status === "submitted" ? "bg-emerald-500/10 text-emerald-400" :
-                        "bg-slate-800 text-slate-400"
+                        isOverdue ? "bg-[rgba(239,68,68,0.10)] text-[var(--accent-red)]" :
+                        isUrgent ? "bg-[rgba(200,132,42,0.10)] text-[var(--accent-amber)]" :
+                        filing.status === "submitted" ? "bg-[rgba(74,222,128,0.10)] text-[var(--accent-green)]" :
+                        "bg-[rgba(247,244,237,0.06)] text-[var(--text-muted)]"
                       }`}>
                         {isOverdue ? "!" : filing.status === "submitted" ? "✓" : `${days}d`}
                       </div>
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3 mb-1">
-                          <p className="text-sm font-medium text-slate-200">{filing.filingType}</p>
+                          <p className="text-sm font-medium text-[var(--text-primary)]">{filing.filingType}</p>
                           <Badge variant={cfg.variant}>{cfg.label}</Badge>
                         </div>
-                        <p className="text-xs text-slate-500 mb-2">{filing.jurisdiction}</p>
-                        <p className="text-xs text-slate-400 leading-relaxed">{filing.description}</p>
+                        <p className="text-xs text-[var(--text-tertiary)] mb-2">{filing.jurisdiction}</p>
+                        <p className="text-xs text-[var(--text-muted)] leading-relaxed">{filing.description}</p>
 
                         <div className="mt-3 flex flex-wrap gap-2">
                           {filing.documents.map(doc => (
-                            <span key={doc} className="px-2 py-1 bg-slate-800 rounded text-xs text-slate-400 border border-slate-700">
+                            <span key={doc} className="px-2 py-1 bg-[rgba(247,244,237,0.06)] rounded text-xs text-[var(--text-muted)] border border-[var(--rule-strong)]">
                               {doc}
                             </span>
                           ))}
@@ -105,7 +105,7 @@ export default function FilingsPage() {
 
                       <div className="text-right shrink-0">
                         <p className={`text-xs font-medium ${
-                          isOverdue ? "text-red-400" : isUrgent ? "text-amber-400" : "text-slate-400"
+                          isOverdue ? "text-[var(--accent-red)]" : isUrgent ? "text-[var(--accent-amber)]" : "text-[var(--text-muted)]"
                         }`}>
                           {isOverdue
                             ? `${Math.abs(days)} days overdue`
@@ -114,12 +114,12 @@ export default function FilingsPage() {
                             : `Due ${formatDate(filing.dueDate)}`}
                         </p>
                         {!isOverdue && filing.status !== "submitted" && (
-                          <button className="mt-2 text-xs text-violet-400 hover:text-violet-300 transition-colors">
+                          <button className="mt-2 text-xs text-[var(--accent-blue)] hover:text-[var(--accent-blue)] transition-colors">
                             Start filing →
                           </button>
                         )}
                         {filing.status === "overdue" && (
-                          <button className="mt-2 text-xs text-red-400 hover:text-red-300 transition-colors flex items-center gap-1">
+                          <button className="mt-2 text-xs text-[var(--accent-red)] hover:text-[var(--accent-red)] transition-colors flex items-center gap-1">
                             <AlertTriangle className="w-3 h-3" /> Urgent action
                           </button>
                         )}

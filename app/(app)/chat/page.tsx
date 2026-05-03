@@ -32,15 +32,15 @@ const cannedResponses: Record<string, string> = {
 function formatMessage(text: string) {
   return text.split("\n").map((line, i) => {
     if (line.startsWith("**") && line.endsWith("**")) {
-      return <p key={i} className="font-semibold text-slate-200 mb-1">{line.replace(/\*\*/g, "")}</p>
+      return <p key={i} className="font-semibold text-[var(--text-primary)] mb-1">{line.replace(/\*\*/g, "")}</p>
     }
     if (line.startsWith("• ") || line.startsWith("✅ ") || line.startsWith("🔴 ") || line.startsWith("🟡 ") || line.startsWith("🟠 ")) {
       const cleaned = line.replace(/\*\*(.*?)\*\*/g, "$1")
-      return <p key={i} className="text-sm text-slate-300 ml-2 mb-1">{cleaned}</p>
+      return <p key={i} className="text-sm text-[var(--text-primary)] ml-2 mb-1">{cleaned}</p>
     }
     if (line.trim() === "") return <div key={i} className="h-2" />
     const cleaned = line.replace(/\*\*(.*?)\*\*/g, "$1")
-    return <p key={i} className="text-sm text-slate-300 mb-1">{cleaned}</p>
+    return <p key={i} className="text-sm text-[var(--text-primary)] mb-1">{cleaned}</p>
   })
 }
 
@@ -86,15 +86,15 @@ export default function ChatPage() {
         {messages.map(msg => (
           <div key={msg.id} className={cn("flex gap-3", msg.role === "user" ? "justify-end" : "justify-start")}>
             {msg.role === "assistant" && (
-              <div className="w-7 h-7 rounded-lg bg-violet-600/20 border border-violet-600/30 flex items-center justify-center shrink-0 mt-0.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-violet-400" />
+              <div className="w-7 h-7 rounded-lg bg-[rgba(59,130,246,0.20)] border border-[rgba(59,130,246,0.30)] flex items-center justify-center shrink-0 mt-0.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent-blue)]" />
               </div>
             )}
             <div className={cn(
               "max-w-xl rounded-2xl px-4 py-3",
               msg.role === "user"
-                ? "bg-violet-600 text-white text-sm"
-                : "bg-slate-900 border border-slate-800"
+                ? "bg-[var(--accent-blue)] text-white text-sm"
+                : "bg-[var(--bg-elevated)] border border-[var(--rule)]"
             )}>
               {msg.role === "assistant"
                 ? <div className="space-y-0.5">{formatMessage(msg.content)}</div>
@@ -106,13 +106,13 @@ export default function ChatPage() {
 
         {loading && (
           <div className="flex gap-3">
-            <div className="w-7 h-7 rounded-lg bg-violet-600/20 border border-violet-600/30 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-3.5 h-3.5 text-violet-400" />
+            <div className="w-7 h-7 rounded-lg bg-[rgba(59,130,246,0.20)] border border-[rgba(59,130,246,0.30)] flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent-blue)]" />
             </div>
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl px-4 py-3">
+            <div className="bg-[var(--bg-elevated)] border border-[var(--rule)] rounded-2xl px-4 py-3">
               <div className="flex gap-1">
                 {[0, 1, 2].map(i => (
-                  <div key={i} className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: `${i * 150}ms` }} />
+                  <div key={i} className="w-1.5 h-1.5 bg-[var(--text-tertiary)] rounded-full animate-bounce" style={{ animationDelay: `${i * 150}ms` }} />
                 ))}
               </div>
             </div>
@@ -123,7 +123,7 @@ export default function ChatPage() {
       {/* Suggestions */}
       {messages.length <= 1 && (
         <div className="px-4 sm:px-8 pb-4">
-          <p className="text-xs text-slate-600 mb-3 flex items-center gap-1.5">
+          <p className="text-xs text-[var(--text-tertiary)] mb-3 flex items-center gap-1.5">
             <Sparkles className="w-3 h-3" /> Suggested prompts
           </p>
           <div className="flex flex-wrap gap-2">
@@ -131,7 +131,7 @@ export default function ChatPage() {
               <button
                 key={p}
                 onClick={() => sendMessage(p)}
-                className="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:border-violet-600/40 hover:text-violet-300 text-slate-400 text-xs rounded-xl transition-colors"
+                className="px-3 py-1.5 bg-[var(--bg-elevated)] border border-[var(--rule)] hover:border-[rgba(59,130,246,0.40)] hover:text-[var(--accent-blue)] text-[var(--text-muted)] text-xs rounded-xl transition-colors"
               >
                 {p}
               </button>
@@ -147,12 +147,12 @@ export default function ChatPage() {
             value={input}
             onChange={e => setInput(e.target.value)}
             placeholder="Ask about investors, filings, attestations..."
-            className="flex-1 px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-sm text-slate-300 placeholder-slate-600 focus:outline-none focus:border-violet-600 transition-colors"
+            className="flex-1 px-4 py-3 bg-[var(--bg-elevated)] border border-[var(--rule)] rounded-xl text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:border-[var(--accent-blue)] transition-colors"
           />
           <button
             type="submit"
             disabled={!input.trim() || loading}
-            className="px-4 py-3 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl transition-colors"
+            className="px-4 py-3 bg-[var(--accent-blue)] hover:bg-[var(--accent-blue)] disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl transition-colors"
           >
             <Send className="w-4 h-4" />
           </button>
