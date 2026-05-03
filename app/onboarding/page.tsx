@@ -340,7 +340,7 @@ export default function OnboardingPage() {
                         data-testid="input-token-name"
                       />
                     </Field>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <Field label="Token Standard">
                         <select
                           value={form.standard}
@@ -412,7 +412,7 @@ export default function OnboardingPage() {
                   </div>
 
                   <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <Field label="Max Investors">
                         <input
                           value={form.maxInvestors}

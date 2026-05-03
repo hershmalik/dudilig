@@ -7,7 +7,7 @@ export default function CertificatePage() {
   const token = tokens[0]
 
   return (
-    <div className="min-h-screen bg-[var(--bg-base)] flex flex-col items-center py-16 px-6">
+    <div className="min-h-screen bg-[var(--bg-base)] flex flex-col items-center py-8 sm:py-16 px-4 sm:px-6">
       {/* Header */}
       <div className="flex items-center gap-2 mb-12">
         <div className="w-7 h-7 bg-[var(--accent-blue)] rounded-lg flex items-center justify-center">
@@ -21,7 +21,7 @@ export default function CertificatePage() {
       {/* Certificate card */}
       <div className="w-full max-w-xl bg-[var(--bg-elevated)] border border-[var(--rule)] rounded-2xl overflow-hidden shadow-2xl">
         {/* Top bar */}
-        <div className="bg-[var(--accent-green)]/10 border-b border-[rgba(74,222,128,0.20)] px-8 py-5 flex items-center gap-4">
+        <div className="bg-[var(--accent-green)]/10 border-b border-[rgba(74,222,128,0.20)] px-5 sm:px-8 py-5 flex items-center gap-4">
           <div className="w-10 h-10 bg-[rgba(74,222,128,0.20)] rounded-full flex items-center justify-center">
             <ShieldCheck className="w-5 h-5 text-[var(--accent-green)]" />
           </div>
@@ -33,7 +33,7 @@ export default function CertificatePage() {
         </div>
 
         {/* Token details */}
-        <div className="px-8 py-6 border-b border-[var(--rule)] space-y-4">
+        <div className="px-5 sm:px-8 py-6 border-b border-[var(--rule)] space-y-4">
           <div>
             <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wider mb-1">Tokenized Asset</p>
             <p className="text-lg font-semibold text-[var(--text-primary)]">{token.name}</p>
@@ -66,7 +66,7 @@ export default function CertificatePage() {
         </div>
 
         {/* Verified fields */}
-        <div className="px-8 py-6 border-b border-[var(--rule)]">
+        <div className="px-5 sm:px-8 py-6 border-b border-[var(--rule)]">
           <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wider mb-4">Verified Compliance Fields (7/7)</p>
           <div className="space-y-2.5">
             {[
@@ -91,7 +91,7 @@ export default function CertificatePage() {
         </div>
 
         {/* Attestation proof */}
-        <div className="px-8 py-6 border-b border-[var(--rule)] space-y-3">
+        <div className="px-5 sm:px-8 py-6 border-b border-[var(--rule)] space-y-3">
           <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wider">Cryptographic Proof</p>
           <div className="bg-[var(--bg-base)] rounded-lg p-3 space-y-2">
             <div className="flex items-center justify-between">
@@ -117,7 +117,7 @@ export default function CertificatePage() {
         </div>
 
         {/* Plain language explainer */}
-        <div className="px-8 py-6 border-b border-[var(--rule)]">
+        <div className="px-5 sm:px-8 py-6 border-b border-[var(--rule)]">
           <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wider mb-3">What this certificate means</p>
           <p className="text-xs text-[var(--text-muted)] leading-relaxed">
             This certificate confirms that the smart contract deployed at the address above has been independently verified to enforce the same rules stated in the offering documents. Dudilig read the contract code directly, checked each compliance claim — investor limits, transfer restrictions, accreditation requirements — and produced this cryptographic proof. Any liquidity provider, institutional investor, or regulator can verify this independently without reading the contract code themselves.
@@ -125,7 +125,7 @@ export default function CertificatePage() {
         </div>
 
         {/* Actions */}
-        <div className="px-8 py-5 flex gap-3">
+        <div className="px-5 sm:px-8 py-5 flex flex-col sm:flex-row gap-3">
           <button className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-[rgba(247,244,237,0.06)] hover:bg-[rgba(247,244,237,0.10)] text-[var(--text-primary)] text-xs font-medium rounded-xl transition-colors">
             <Copy className="w-3.5 h-3.5" /> Copy Link
           </button>
