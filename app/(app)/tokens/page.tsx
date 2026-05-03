@@ -84,7 +84,7 @@ export default function TokensPage() {
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-xs text-[var(--text-tertiary)]">Compliance Score</p>
-                    <p className="text-sm font-bold text-[var(--text-primary)]">{token.complianceScore}/100</p>
+                    <p className="text-sm font-semibold text-[var(--text-primary)]">{token.complianceScore}/100</p>
                   </div>
                   <div className="h-2 bg-[rgba(247,244,237,0.06)] rounded-full overflow-hidden">
                     <div

@@ -49,7 +49,7 @@ export default function FilingsPage() {
                   }`} />
                 </div>
                 <div>
-                  <p className="text-xl font-bold text-[var(--text-primary)]">{items.length}</p>
+                  <p className="text-xl font-semibold text-[var(--text-primary)]">{items.length}</p>
                   <p className="text-xs text-[var(--text-tertiary)]">{cfg.label}</p>
                 </div>
               </Card>
@@ -77,7 +77,7 @@ export default function FilingsPage() {
                 return (
                   <div key={filing.id} className="px-6 py-5 hover:bg-[rgba(247,244,237,0.06)]/30 transition-colors">
                     <div className="flex items-start gap-4">
-                      <div className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold ${
+                      <div className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-xs font-semibold ${
                         isOverdue ? "bg-[rgba(239,68,68,0.10)] text-[var(--accent-red)]" :
                         isUrgent ? "bg-[rgba(200,132,42,0.10)] text-[var(--accent-amber)]" :
                         filing.status === "submitted" ? "bg-[rgba(74,222,128,0.10)] text-[var(--accent-green)]" :

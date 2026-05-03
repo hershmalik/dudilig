@@ -133,7 +133,7 @@ export function TopBar({ title, subtitle, action }: TopBarProps) {
             <Bell className="w-4 h-4" />
             {unreadCount > 0 && (
               <span
-                className="absolute top-1.5 right-1.5 min-w-[10px] h-[10px] px-[3px] rounded-full flex items-center justify-center text-[8px] font-bold leading-none animate-pulse-soft"
+                className="absolute top-1.5 right-1.5 min-w-[10px] h-[10px] px-[3px] rounded-full flex items-center justify-center text-[8px] font-semibold leading-none animate-pulse-soft"
                 style={{ background: "var(--accent-red)", color: "#fff" }}
                 data-testid="badge-notification-count"
               >

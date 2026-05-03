@@ -13,7 +13,7 @@ export default function CertificatePage() {
         <div className="w-7 h-7 bg-[var(--accent-blue)] rounded-lg flex items-center justify-center">
           <ShieldCheck className="w-4 h-4 text-white" />
         </div>
-        <span className="font-bold text-[var(--text-primary)]">Dudilig</span>
+        <span className="font-semibold text-[var(--text-primary)]">Dudilig</span>
         <span className="text-[var(--text-tertiary)] mx-2">/</span>
         <span className="text-[var(--text-muted)] text-sm">Trust Certificate</span>
       </div>
@@ -26,7 +26,7 @@ export default function CertificatePage() {
             <ShieldCheck className="w-5 h-5 text-[var(--accent-green)]" />
           </div>
           <div className="flex-1">
-            <p className="text-base font-bold text-[var(--accent-green)]">Compliance Attestation Passed</p>
+            <p className="text-base font-semibold text-[var(--accent-green)]">Compliance Attestation Passed</p>
             <p className="text-xs text-[var(--text-muted)] mt-0.5">All compliance claims cryptographically verified against deployed contract</p>
           </div>
           <Badge variant="success">Valid</Badge>
@@ -36,7 +36,7 @@ export default function CertificatePage() {
         <div className="px-8 py-6 border-b border-[var(--rule)] space-y-4">
           <div>
             <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wider mb-1">Tokenized Asset</p>
-            <p className="text-lg font-bold text-[var(--text-primary)]">{token.name}</p>
+            <p className="text-lg font-semibold text-[var(--text-primary)]">{token.name}</p>
           </div>
           <div className="grid grid-cols-2 gap-4">
             {[

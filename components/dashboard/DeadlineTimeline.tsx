@@ -24,7 +24,7 @@ export function DeadlineTimeline() {
             )}
           >
             <div className={cn(
-              "shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-xs font-bold",
+              "shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-xs font-semibold",
               isOverdue ? "bg-[rgba(239,68,68,0.10)] text-[var(--accent-red)]" : isUrgent ? "bg-[rgba(200,132,42,0.10)] text-[var(--accent-amber)]" : "bg-[rgba(247,244,237,0.06)] text-[var(--text-muted)]"
             )}>
               {isOverdue ? "!" : `${days}d`}
