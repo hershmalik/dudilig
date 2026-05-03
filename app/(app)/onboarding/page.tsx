@@ -46,7 +46,7 @@ export default function OnboardingPage() {
           <div className="w-7 h-7 bg-[var(--accent-blue)] rounded-lg flex items-center justify-center">
             <ShieldCheck className="w-4 h-4 text-white" />
           </div>
-          <span className="font-bold text-[var(--text-primary)] text-sm">Dudilig</span>
+          <span className="font-semibold text-[var(--text-primary)] text-sm">Dudilig</span>
         </div>
 
         <div className="space-y-1">
@@ -56,7 +56,7 @@ export default function OnboardingPage() {
             const active = step === s.id
             return (
               <div key={s.id} className="flex items-center gap-3 px-3 py-2.5 rounded-lg">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ${
                   done ? "bg-[var(--accent-green)] text-white" :
                   active ? "bg-[var(--accent-blue)] text-white" :
                   "bg-[rgba(247,244,237,0.06)] text-[var(--text-tertiary)]"
@@ -97,7 +97,7 @@ export default function OnboardingPage() {
           {step === 1 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold text-[var(--text-primary)]">Tell us about your entity</h2>
+                <h2 className="text-xl font-semibold text-[var(--text-primary)]">Tell us about your entity</h2>
                 <p className="text-sm text-[var(--text-muted)] mt-1">We use this to configure your compliance workspace and jurisdiction rules.</p>
               </div>
               <div className="space-y-4">
@@ -138,7 +138,7 @@ export default function OnboardingPage() {
           {step === 2 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold text-[var(--text-primary)]">About your token</h2>
+                <h2 className="text-xl font-semibold text-[var(--text-primary)]">About your token</h2>
                 <p className="text-sm text-[var(--text-muted)] mt-1">Connect your deployed smart contract or tell us what you plan to launch.</p>
               </div>
               <div className="space-y-4">
@@ -193,7 +193,7 @@ export default function OnboardingPage() {
           {step === 3 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold text-[var(--text-primary)]">Compliance configuration</h2>
+                <h2 className="text-xl font-semibold text-[var(--text-primary)]">Compliance configuration</h2>
                 <p className="text-sm text-[var(--text-muted)] mt-1">These become the claims your attestation engine will verify against the contract.</p>
               </div>
               <div className="space-y-4">
@@ -244,7 +244,7 @@ export default function OnboardingPage() {
           {step === 4 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold text-[var(--text-primary)]">Your workspace is ready</h2>
+                <h2 className="text-xl font-semibold text-[var(--text-primary)]">Your workspace is ready</h2>
                 <p className="text-sm text-[var(--text-muted)] mt-1">We ran your first attestation automatically. Here is what we found.</p>
               </div>
 

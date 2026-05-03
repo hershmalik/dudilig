@@ -19,7 +19,7 @@ export function KpiCard({ label, value, icon: Icon, delta, deltaType = "neutral"
         <div className="space-y-3">
           <p className="text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-wider">{label}</p>
           <div className="flex items-end gap-2">
-            <p className="text-2xl font-bold text-[var(--text-primary)]">{value}</p>
+            <p className="text-2xl font-semibold text-[var(--text-primary)]">{value}</p>
             {badge}
           </div>
           {delta && (

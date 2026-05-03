@@ -36,7 +36,7 @@ export default function RootLayout({
       <body
         className={`${interTight.variable} ${jetbrainsMono.variable} antialiased`}
         style={{
-          fontFamily: "var(--font-inter-tight), 'Inter Tight', system-ui, sans-serif",
+          fontFamily: "var(--font-sans)",
           background: "var(--bg-base)",
           color: "var(--text-primary)",
         }}

@@ -77,7 +77,7 @@ function ScoreRing({ score, status }: { score: number; status: string }) {
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-2xl font-bold text-[var(--text-primary)]">{score}</span>
+        <span className="text-2xl font-semibold text-[var(--text-primary)]">{score}</span>
         <span className="text-xs text-[var(--text-tertiary)]">/ 100</span>
       </div>
     </div>
@@ -441,7 +441,7 @@ export default function AnalyzePage() {
                     <div className="space-y-2">
                       {result.recommendations.map((rec, i) => (
                         <div key={i} className="flex items-start gap-2">
-                          <span className="text-[var(--accent-blue)] text-xs font-bold mt-0.5 shrink-0">{i + 1}.</span>
+                          <span className="text-[var(--accent-blue)] text-xs font-semibold mt-0.5 shrink-0">{i + 1}.</span>
                           <p className="text-xs text-[var(--text-muted)]">{rec}</p>
                         </div>
                       ))}

@@ -32,7 +32,7 @@ export function ComplianceScoreRing({ score }: ComplianceScoreRingProps) {
           </RadialBarChart>
         </ResponsiveContainer>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-2xl font-bold text-[var(--text-primary)]">{score}</span>
+          <span className="text-2xl font-semibold text-[var(--text-primary)]">{score}</span>
           <span className="text-xs text-[var(--text-tertiary)]">/ 100</span>
         </div>
       </div>

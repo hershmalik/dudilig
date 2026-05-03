@@ -146,7 +146,7 @@ export default function InvestorsPage() {
           </div>
           <div className="p-5 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[rgba(59,130,246,0.20)] flex items-center justify-center text-sm font-bold text-[var(--accent-blue)]">
+              <div className="w-10 h-10 rounded-full bg-[rgba(59,130,246,0.20)] flex items-center justify-center text-sm font-semibold text-[var(--accent-blue)]">
                 {selected.name.charAt(0)}
               </div>
               <div>

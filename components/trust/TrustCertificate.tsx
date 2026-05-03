@@ -229,8 +229,8 @@ function DudiligLogo() {
       </svg>
       <span
         style={{
-          fontFamily: "var(--font-jetbrains-mono, monospace)",
-          fontSize: "14px",
+          fontFamily: "var(--font-mono)",
+          fontSize: "15px",
           fontWeight: 500,
           letterSpacing: "-0.01em",
           color: "var(--text-primary)",
