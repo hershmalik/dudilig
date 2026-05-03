@@ -10,18 +10,18 @@ const POWER4_OUT: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
 const containerVariants: Variants = {
   hidden: {},
   show: {
-    transition: { staggerChildren: 0.09, delayChildren: 0.15 },
+    transition: { staggerChildren: 0.11, delayChildren: 0.3 },
   },
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 24, scale: 0.96, filter: "blur(4px)" },
+  hidden: { opacity: 0, y: 30, scale: 0.94, filter: "blur(6px)" },
   show: {
     opacity: 1,
     y: 0,
     scale: 1,
     filter: "blur(0px)",
-    transition: { duration: 0.7, ease: POWER4_OUT },
+    transition: { duration: 0.85, ease: POWER4_OUT },
   },
 };
 
@@ -183,10 +183,10 @@ export default function HeroSection({ showcase }: { showcase: Certificate[] }) {
           variants={itemVariants}
           className="font-serif"
           style={{
-            marginTop: 24,
-            fontSize: "clamp(2.8rem, 6.5vw, 5.5rem)",
+            marginTop: 28,
+            fontSize: "clamp(3rem, 7.5vw, 6rem)",
             fontWeight: 500,
-            lineHeight: 1.05,
+            lineHeight: 1,
             letterSpacing: "-0.02em",
             color: "#ffffff",
             maxWidth: "20ch",
@@ -204,42 +204,42 @@ export default function HeroSection({ showcase }: { showcase: Certificate[] }) {
         >
           <Link
             href="/login"
-            className="inline-flex items-center gap-1.5 rounded-full transition-all duration-200 hover:scale-[1.02]"
+            className="inline-flex items-center gap-1.5 rounded-full transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
             style={{
               background: "#ffffff",
               color: "#08080a",
-              padding: "12px 28px",
-              fontSize: 14,
+              padding: "10px 28px",
+              fontSize: 13,
               fontWeight: 500,
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 0 40px rgba(255,255,255,0.12)")}
+            onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 0 40px rgba(255,255,255,0.10)")}
             onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
             data-testid="link-get-started"
           >
-            Get Started <ArrowRight className="w-4 h-4" />
+            Get Started <ArrowRight className="w-3.5 h-3.5" />
           </Link>
           <Link
             href="/dashboard"
             className="inline-flex items-center gap-1.5 rounded-full transition-colors duration-200"
             style={{
-              background: "rgba(255,255,255,0.04)",
+              background: "#18181b",
               border: "1px solid rgba(255,255,255,0.10)",
-              color: "rgba(255,255,255,0.85)",
-              padding: "12px 28px",
-              fontSize: 14,
+              color: "rgba(255,255,255,0.50)",
+              padding: "10px 28px",
+              fontSize: 13,
               fontWeight: 500,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)";
-              e.currentTarget.style.background = "rgba(255,255,255,0.06)";
+              e.currentTarget.style.borderColor = "rgba(255,255,255,0.20)";
+              e.currentTarget.style.color = "rgba(255,255,255,0.70)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.borderColor = "rgba(255,255,255,0.10)";
-              e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+              e.currentTarget.style.color = "rgba(255,255,255,0.50)";
             }}
             data-testid="link-view-demo"
           >
-            View Demo <ArrowRight className="w-4 h-4" />
+            View Demo <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </motion.div>
 
