@@ -34,6 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
+        suppressHydrationWarning
         className={`${interTight.variable} ${jetbrainsMono.variable} antialiased`}
         style={{
           fontFamily: "var(--font-sans)",
