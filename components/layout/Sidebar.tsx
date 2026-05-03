@@ -18,6 +18,7 @@ import {
   Zap,
   PanelLeftOpen,
 } from "lucide-react"
+import { CreditTopUpDialog } from "@/components/sidebar/CreditTopUpDialog"
 
 const mainNav = [
   { href: "/dashboard",   label: "Dashboard",          icon: LayoutDashboard },
@@ -31,12 +32,16 @@ const mainNav = [
 
 const aiNav = { href: "/chat", label: "Mike, Compliance AI", icon: Sparkles }
 
-const TOTAL_CREDITS = 5000
-const USED_CREDITS  = 3247
-const REMAINING     = TOTAL_CREDITS - USED_CREDITS
-const PCT_USED      = (USED_CREDITS / TOTAL_CREDITS) * 100
-const STORAGE_KEY   = "dudilig.sidebar.collapsed"
+const DEFAULT_TOTAL_CREDITS = 5000
+const DEFAULT_USED_CREDITS  = 3247
+const STORAGE_KEY     = "dudilig.sidebar.collapsed"
+const CREDITS_STORAGE = "dudilig.credits.v1"
 const EASE: [number, number, number, number] = [0.165, 0.84, 0.44, 1]
+
+interface CreditsState {
+  total: number
+  used: number
+}
 
 function DudiligLogo() {
   return (
@@ -261,10 +266,27 @@ export function Sidebar() {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
   const [hydrated, setHydrated] = useState(false)
+  const [credits, setCredits] = useState<CreditsState>({
+    total: DEFAULT_TOTAL_CREDITS,
+    used: DEFAULT_USED_CREDITS,
+  })
+  const [topUpOpen, setTopUpOpen] = useState(false)
 
   useEffect(() => {
     try {
       if (localStorage.getItem(STORAGE_KEY) === "1") setCollapsed(true)
+      const raw = localStorage.getItem(CREDITS_STORAGE)
+      if (raw) {
+        const parsed = JSON.parse(raw) as CreditsState
+        if (
+          parsed &&
+          typeof parsed.total === "number" &&
+          typeof parsed.used === "number" &&
+          parsed.total > 0
+        ) {
+          setCredits(parsed)
+        }
+      }
     } catch {}
     setHydrated(true)
   }, [])
@@ -275,6 +297,20 @@ export function Sidebar() {
       localStorage.setItem(STORAGE_KEY, collapsed ? "1" : "0")
     } catch {}
   }, [collapsed, hydrated])
+
+  useEffect(() => {
+    if (!hydrated) return
+    try {
+      localStorage.setItem(CREDITS_STORAGE, JSON.stringify(credits))
+    } catch {}
+  }, [credits, hydrated])
+
+  const remaining = Math.max(0, credits.total - credits.used)
+  const pctUsed = credits.total > 0 ? (credits.used / credits.total) * 100 : 0
+
+  const handleTopUp = (added: number) => {
+    setCredits((c) => ({ total: c.total + added, used: c.used }))
+  }
 
   const aiActive = pathname === aiNav.href || pathname.startsWith(aiNav.href + "/")
 
@@ -405,23 +441,36 @@ export function Sidebar() {
 
               <div className="space-y-1.5">
                 <div className="w-full h-1 rounded-full overflow-hidden" style={{ background: "var(--rule-strong)" }}>
-                  <div
+                  <motion.div
                     className="h-full rounded-full"
-                    style={{ width: `${PCT_USED}%`, background: "var(--accent-blue)" }}
+                    style={{ background: "var(--accent-blue)" }}
+                    animate={{ width: `${pctUsed}%` }}
+                    transition={{ duration: 0.6, ease: EASE }}
                   />
                 </div>
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs whitespace-nowrap" style={{ color: "var(--text-muted)" }}>
-                    <span className="font-medium" style={{ color: "var(--text-primary)" }}>
-                      {REMAINING.toLocaleString()}
-                    </span>{" "}remaining
+                    <motion.span
+                      key={remaining}
+                      initial={{ opacity: 0.4 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className="font-medium"
+                      style={{ color: "var(--text-primary)" }}
+                      data-testid="text-credits-remaining"
+                    >
+                      {remaining.toLocaleString()}
+                    </motion.span>{" "}remaining
                   </span>
-                  <span className="fig-label">{TOTAL_CREDITS.toLocaleString()} / mo</span>
+                  <span className="fig-label" data-testid="text-credits-total">
+                    {credits.total.toLocaleString()} total
+                  </span>
                 </div>
               </div>
 
               <button
-                className="w-full py-1.5 text-xs font-medium rounded-full transition-colors"
+                onClick={() => setTopUpOpen(true)}
+                className="w-full py-1.5 text-xs font-medium rounded-full transition-all hover:bg-[rgba(59,130,246,0.08)] active:scale-[0.98]"
                 style={{
                   color: "var(--accent-blue)",
                   border: "1px solid rgba(59,130,246,0.20)",
@@ -451,6 +500,14 @@ export function Sidebar() {
           </div>
         </div>
       </motion.aside>
+
+      <CreditTopUpDialog
+        open={topUpOpen}
+        onOpenChange={setTopUpOpen}
+        onPurchase={handleTopUp}
+        remaining={remaining}
+        total={credits.total}
+      />
     </>
   )
 }
