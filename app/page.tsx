@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { MeshBackground } from "@/components/MeshBackground";
 
 function DudiligLogo() {
   return (
@@ -39,6 +40,7 @@ export default function Home() {
       className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden"
       style={{ background: "var(--bg-base)" }}
     >
+      <MeshBackground />
       <div className="gradient-cool" style={{ top: "-300px", left: "-200px" }} />
       <div className="gradient-warm" style={{ top: "-300px", right: "-200px" }} />
 
