@@ -15,7 +15,27 @@ The app is a demo/prototype using mock data throughout. There is no real databas
 
 ## User Preferences
 
-Preferred communication style: Simple, everyday language.
+- **Tone**: Treat the user (Hersh Malik, Dudilig CEO) as a co-founder/CTO. Detailed technical explanations are welcome. Em dashes are allowed.
+- **Production deployment**: dudilig.com (Render). Don't break `/api/analyze` — it's the only live API and powers the contract analyzer demo.
+- **Hard constraints**:
+  - Real SHA-256 hashing only (never mock or stub hash output)
+  - `/trust/[id]` and the Issuer Passport must remain auth-free (publicly shareable)
+  - File-based JSON for any persistence — no database
+  - Do NOT modify `app/globals.css` design tokens, `AGENTS.md`, or `CLAUDE.md`
+- **Stack lock**: Stay on the existing libraries — Framer Motion, Recharts, Radix, Lucide, Anthropic SDK. Don't introduce new UI frameworks.
+
+## Mobile Responsive Baseline
+
+The app must remain usable on iOS Safari and small Android viewports. Conventions in place:
+
+- **Bottom nav (`MobileNav`)**: 56px tap targets (`min-h-[56px]`) and `paddingBottom: env(safe-area-inset-bottom)` to clear the iOS home indicator. Visible below `lg` (1024px).
+- **Main content**: `pb-[calc(56px+env(safe-area-inset-bottom))] lg:pb-0` in `app/(app)/layout.tsx` so content never hides behind the bottom nav.
+- **Chat page**: Uses `h-full` (NOT `h-screen`) so the composer respects the layout's mobile-nav padding.
+- **Tokens page rows**: `flex-col lg:flex-row` so the status panel stacks under the meta block on mobile; metrics grid uses `grid-cols-2 sm:grid-cols-3 lg:grid-cols-5`.
+- **Onboarding**: Sidebar stacks on top below `lg`, form pairs use `grid-cols-1 sm:grid-cols-2`.
+- **TopBar**: `px-4 sm:px-8`, subtitle hidden below `sm` to preserve room for the title.
+- **ComplianceScoreRing**: `flex-col sm:flex-row` so the ring and legend stack on phones.
+- **Page padding convention**: `p-4 sm:p-8` (or `px-4 sm:px-8`) on every interior page wrapper.
 
 ## System Architecture
 

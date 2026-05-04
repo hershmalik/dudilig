@@ -76,7 +76,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-full">
       <TopBar
         title="Compliance AI"
         subtitle="Ask anything about your compliance program"

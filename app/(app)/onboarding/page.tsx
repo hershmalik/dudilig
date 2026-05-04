@@ -39,9 +39,9 @@ export default function OnboardingPage() {
   function back() { if (step > 1) setStep(s => s - 1) }
 
   return (
-    <div className="min-h-screen bg-slate-950 flex">
+    <div className="min-h-screen bg-slate-950 flex flex-col lg:flex-row">
       {/* Sidebar */}
-      <div className="w-64 bg-slate-900 border-r border-slate-800 p-8 flex flex-col">
+      <div className="w-full lg:w-64 bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-800 p-6 lg:p-8 flex flex-col">
         <div className="flex items-center gap-2 mb-10">
           <div className="w-7 h-7 bg-violet-600 rounded-lg flex items-center justify-center">
             <ShieldCheck className="w-4 h-4 text-white" />
@@ -80,7 +80,7 @@ export default function OnboardingPage() {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex items-center justify-center p-12">
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-12">
         <div className="w-full max-w-lg">
           {/* Progress */}
           <div className="flex items-center gap-2 mb-8">
@@ -151,7 +151,7 @@ export default function OnboardingPage() {
                     className="w-full px-3 py-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-slate-300 placeholder-slate-600 focus:outline-none focus:border-violet-600 transition-colors"
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-medium text-slate-400 mb-1.5">Token Standard</label>
                     <select
@@ -197,7 +197,7 @@ export default function OnboardingPage() {
                 <p className="text-sm text-slate-400 mt-1">These become the claims your attestation engine will verify against the contract.</p>
               </div>
               <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-medium text-slate-400 mb-1.5">Max Investors</label>
                     <input
