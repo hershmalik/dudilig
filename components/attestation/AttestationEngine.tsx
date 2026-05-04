@@ -163,7 +163,7 @@ export function AttestationEngine({ failMode }: AttestationEngineProps) {
             </button>
             <button className="flex-1 py-2 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5">
               <Download className="w-3 h-3" />
-              Download Certificate
+              Download Passport
             </button>
           </div>
         </div>
