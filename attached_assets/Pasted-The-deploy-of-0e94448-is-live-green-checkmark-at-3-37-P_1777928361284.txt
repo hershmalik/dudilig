@@ -1,0 +1,51 @@
+The deploy of 0e94448 is live (green checkmark at 3:37 PM). The site is running the correct code.
+
+Try a hard refresh in your browser: Cmd + Shift + R (Mac) or Ctrl + Shift + R (Windows). Your browser is likely showing a cached version of the old page.
+
+tried it, still same thing. oh its because the link is pointing to replit instead of my code base. how do i fix that
+
+What URL are you visiting when you see the old version? Is it demo.dudilig.com or a replit.app / onrender.com URL?
+
+If you're visiting a Replit URL, that's a completely separate deployment — you'd just stop using that link and use demo.dudilig.com instead (which is the Render deployment with the correct code).
+
+demo.dudilig.com 
+
+but look here
+
+demo.dudilig.com is attached to your Replit deployment — that's why it's showing the old code. You need to move it to Render.
+
+Step 1 — Remove from Replit:
+In the Replit panel you have open, click the ⋮ next to https://demo.dudilig.com and remove/disconnect that custom domain.
+
+Step 2 — Point DNS to Render:
+Go to wherever you manage your DNS (GoDaddy, Cloudflare, Namecheap, etc.) and update the demo CNAME record to point to your Render service URL (something like dudilig.onrender.com).
+
+Step 3 — Verify in Render:
+In your Render dashboard under Settings → Custom Domains, add demo.dudilig.com and click Verify.
+
+In the meantime, your correctly deployed app is accessible directly at your Render URL — check the Render dashboard under the service name for the .onrender.com link.
+
+i removed it but render has an issue now
+
+Good news — the green checkmark means the DNS is already pointing correctly to Render. The SSL certificate error is normal right after switching from Replit — it just needs time to provision. Wait 5–15 minutes and it should resolve on its own.
+
+In the meantime, use the direct Render URL to verify your changes: https://dudilig.onrender.com — close that dialog and you'll see it linked on the settings page.
+
+https://dudilig.onrender.com -- this doesnt have my replit changes
+
+What specifically is missing or different? For example, are you seeing a different design, different pages, or different features on Replit vs Render?
+
+The two codebases diverged — Replit had its own version and our feature branch had the design system + Issuer Passport work. When we pushed to main, the Replit-specific changes got replaced. I need to know what's missing so I can bring those changes over.
+
+different design
+
+Can you take a screenshot of what Replit looks like vs what Render shows? That'll help me see exactly what's different and port the changes over.
+
+ok bring up all the code changes you did today and ill send it to replit instead
+
+
+Ran 2 commands
+The cleanest way is to just pull from GitHub directly in Replit rather than copy-pasting 20 files. In the Replit terminal, run:
+
+git pull origin main
+That will pull all our changes (design system, mobile nav, Issuer Passport rename, contract analyzer) into Replit in one shot. Then click Republish in Replit.
