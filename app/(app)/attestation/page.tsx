@@ -39,7 +39,7 @@ function AttestationExplainer() {
       color: "text-amber-400",
       bg: "bg-amber-500/10 border-amber-500/20",
       title: "Issuer Passport",
-      description: "A shareable public certificate any LP, regulator, or liquidity provider can verify — no code-reading required.",
+      description: "A shareable public passport any LP, regulator, or liquidity provider can verify — no code-reading required.",
     },
   ]
 
@@ -78,7 +78,7 @@ function AttestationExplainer() {
         <div className="bg-slate-800/50 rounded-xl p-5 border border-slate-700">
           <p className="text-xs font-semibold text-slate-300 mb-2">Real example</p>
           <p className="text-xs text-slate-400 leading-relaxed">
-            A Singapore-based tokenized private credit fund launches a Reg S offering for non-US investors only. Their lawyer filed the right documents. But does the smart contract actually block US wallet addresses? Dudilig reads the contract, verifies the geo-blocking and accreditation logic is correctly implemented, and issues a signed attestation certificate. That certificate is what gets Wintermute or Galaxy Digital comfortable enough to provide liquidity — without it, they won't touch it.
+            A Singapore-based tokenized private credit fund launches a Reg S offering for non-US investors only. Their lawyer filed the right documents. But does the smart contract actually block US wallet addresses? Dudilig reads the contract, verifies the geo-blocking and accreditation logic is correctly implemented, and issues a signed Issuer Passport. That passport is what gets Wintermute or Galaxy Digital comfortable enough to provide liquidity — without it, they won't touch it.
           </p>
         </div>
       </div>
