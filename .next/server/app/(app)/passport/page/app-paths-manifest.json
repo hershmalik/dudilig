@@ -1,0 +1,3 @@
+{
+  "/(app)/passport/page": "app/(app)/passport/page.js"
+}

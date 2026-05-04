@@ -1,139 +1,46 @@
-# Dudilig — Compliance OS
+# Dudilig — Compliance OS for Tokenized Real-World Assets
 
 ## Overview
-
-Dudilig is a compliance operating system for tokenized real-world assets (RWAs). It helps fund managers and token issuers automate and track regulatory compliance across multiple jurisdictions. The app provides:
-
-- **KYC/AML Investor Management** — Track investor verification status, flag PEP matches, and run sanctions screening
-- **Smart Contract Attestation Engine** — Verify that deployed on-chain contracts actually enforce the compliance claims in legal documents (e.g., max investors, lockup periods, accredited-only restrictions)
-- **Contract Analyzer** — AI-powered analysis of Solidity contracts against regulatory standards (Reg D, Reg S, MiCA, ERC-1400)
-- **Regulatory Filings Tracker** — Monitor filing deadlines across 6+ jurisdictions (Cayman, Singapore, SEC, ADGM, etc.)
-- **Issuer Passport** — Shareable public compliance certificate for tokens
-- **Compliance AI Chat** — Natural language interface for compliance queries
-
-The app is a demo/prototype using mock data throughout. There is no real database or authentication system yet.
+Dudilig is an AI-native compliance work platform designed for tokenized real-world asset (RWA) issuers. It streamlines and automates critical compliance tasks such as KYC/AML monitoring, smart contract attestation, regulatory filings, and investor registry management. The platform aims to transform compliance from a bottleneck into a continuous, verifiable trust signal, enhancing the credibility and market potential of tokenized assets. The project's vision is to provide a comprehensive Compliance OS for tokenized assets, supporting applications for programs like a16z Speedrun.
 
 ## User Preferences
-
-- **Tone**: Treat the user (Hersh Malik, Dudilig CEO) as a co-founder/CTO. Detailed technical explanations are welcome. Em dashes are allowed.
-- **Production deployment**: dudilig.com (Render). Don't break `/api/analyze` — it's the only live API and powers the contract analyzer demo.
-- **Hard constraints**:
-  - Real SHA-256 hashing only (never mock or stub hash output)
-  - `/trust/[id]` and the Issuer Passport must remain auth-free (publicly shareable)
-  - File-based JSON for any persistence — no database
-  - Do NOT modify `app/globals.css` design tokens, `AGENTS.md`, or `CLAUDE.md`
-- **Stack lock**: Stay on the existing libraries — Framer Motion, Recharts, Radix, Lucide, Anthropic SDK. Don't introduce new UI frameworks.
-
-## Mobile Responsive Baseline
-
-The app must remain usable on iOS Safari and small Android viewports. Conventions in place:
-
-- **Bottom nav (`MobileNav`)**: 56px tap targets (`min-h-[56px]`) and `paddingBottom: env(safe-area-inset-bottom)` to clear the iOS home indicator. Visible below `lg` (1024px).
-- **Main content**: `pb-[calc(56px+env(safe-area-inset-bottom))] lg:pb-0` in `app/(app)/layout.tsx` so content never hides behind the bottom nav.
-- **Chat page**: Uses `h-full` (NOT `h-screen`) so the composer respects the layout's mobile-nav padding.
-- **Tokens page rows**: `flex-col lg:flex-row` so the status panel stacks under the meta block on mobile; metrics grid uses `grid-cols-2 sm:grid-cols-3 lg:grid-cols-5`.
-- **Onboarding**: Sidebar stacks on top below `lg`, form pairs use `grid-cols-1 sm:grid-cols-2`.
-- **TopBar**: `px-4 sm:px-8`, subtitle hidden below `sm` to preserve room for the title.
-- **ComplianceScoreRing**: `flex-col sm:flex-row` so the ring and legend stack on phones.
-- **Page padding convention**: `p-4 sm:p-8` (or `px-4 sm:px-8`) on every interior page wrapper.
+I want to interact with the agent as if it were a co-founder CTO.
+I prefer detailed explanations.
+Do not make changes to `AGENTS.md` and `CLAUDE.md`.
+Do not change the design system which uses CSS custom properties from `globals.css`.
+Do not introduce a database for the 24-hour sprint; file-based JSON is fine.
+Do not fake the cryptographic hash; it must be a real SHA-256 over a deterministic canonical payload.
+The public certificate route must be authentication-free.
+Don't break `/api/analyze` or the `/analyze` UI.
 
 ## System Architecture
 
-### Framework & Runtime
-- **Next.js 16.2.4** with the App Router (not Pages Router)
-- **React 19** and **TypeScript 5**
-- **IMPORTANT**: The `AGENTS.md` file warns that this version of Next.js has breaking changes from older versions. Always read `node_modules/next/dist/docs/` before writing Next.js-specific code
+### UI/UX Decisions
+The application uses a custom design system based on CSS variables defined in `app/globals.css` (e.g., `--bg-base`, `--accent-blue`, `--accent-green`), rather than shadcn theming. UI components leverage Radix dialog/slot, Lucide icons for iconography, Framer Motion for animations, and Recharts for data visualization. The public `/trust/[id]` route is designed to be auth-free and without the main app shell, ensuring broad accessibility. An embeddable `/trust/[id]/embed` route provides a transparent-background, iframe-friendly card for easy integration into other platforms.
 
-### Directory Structure
-```
-app/
-  (app)/          — Authenticated app routes (layout wraps with Sidebar + MobileNav)
-    dashboard/    — Main compliance overview
-    investors/    — Investor KYC/AML registry
-    attestation/  — Smart contract attestation engine
-    analyze/      — AI-powered contract analyzer
-    filings/      — Regulatory filing deadlines
-    tokens/       — Token portfolio
-    chat/         — Compliance AI chat
-    passport/     — Issuer Passport public certificate
-    onboarding/   — New user onboarding flow
-  api/
-    analyze/      — Server-side API route calling Anthropic Claude
-  login/          — Login page (no real auth yet)
-  page.tsx        — Landing/marketing page
-  layout.tsx      — Root layout with fonts
-components/
-  layout/         — Sidebar, MobileNav, TopBar
-  dashboard/      — KpiCard, ActivityFeed, ComplianceScoreRing, DeadlineTimeline
-  attestation/    — AttestationEngine, ContractCodeBlock
-  ui/             — Shared primitives: Card, Badge
-lib/
-  mock-data/      — Static mock data: investors, tokens, filings, attestations, activity
-  types/          — TypeScript type definitions
-  utils.ts        — Shared helpers: cn, formatCurrency, formatDate, timeAgo, daysUntil
-```
+**Landing-route exception:** The marketing homepage (`app/page.tsx` → `components/landing/HeroSection.tsx`) is the one route that intentionally departs from the app shell aesthetic. It uses background `#08080a` (darker than `--bg-base`), a subtle radial blue + 1px grid texture, and **Playfair Display** (loaded via next/font as `--font-playfair` / `--font-serif`) for the H1 only. Body text on the landing remains Inter Tight; mono labels remain JetBrains Mono. Entrance reveal is handled by **Framer Motion** (already a dep) using a power4-out cubic-bezier `[0.165, 0.84, 0.44, 1]`, ~0.7s duration, 0.09s stagger, 0.15s initial delay — substituted for the brief's GSAP request to avoid adding a second animation library. All other authenticated routes continue to follow the strict design-token rules below.
 
-### Routing
-- Route group `(app)` applies a shared layout (Sidebar + MobileNav) to all interior pages
-- The root `app/page.tsx` is a public landing page
-- `app/login/page.tsx` is a separate public login page
+**Design system enforcement:** every authenticated route under `app/(app)/*` (dashboard, attestation, analyze, investors, filings, tokens, chat, certificate) plus the focused `/onboarding` flow (lives at top-level `app/onboarding/` so it does **not** inherit the main app shell — it has its own 4-step rail) plus shared dashboard/attestation components reference design tokens directly via Tailwind arbitrary value syntax (`bg-[var(--bg-base)]`, `text-[var(--text-muted)]`, `border-[var(--rule)]`, etc.). No raw `slate-*`, `violet-*`, `emerald-*`, `amber-*`, or `red-[0-9]*` Tailwind palette classes are permitted in these surfaces. Status colors map: success → `--accent-green` (#4ADE80), warning → `--accent-amber` (#C8842A), error → `--accent-red` (#EF4444), info/brand → `--accent-blue` (#3B82F6). Recharts fills also use these hex values directly. The bulk-transform script lives at `.local/transform_colors.py` and can be re-run if drift appears.
 
-### Frontend Architecture
-- **All UI uses client-side state only** — no server state management library (no React Query, no Zustand)
-- Pages that need interactivity are marked `"use client"`, static pages use React Server Components by default
-- **Tailwind CSS v4** for styling, combined with inline CSS custom properties (`var(--bg-base)`, etc.) for the design system
-- Custom design tokens are defined in `app/globals.css` as CSS variables (dark editorial theme: dark navy backgrounds, off-white text, blue/green/amber/red accents)
-- **Fonts**: Inter Tight (sans) and JetBrains Mono (monospace), loaded via `next/font/google`
-- **Component libraries used**:
-  - `@radix-ui/react-dialog` — accessible modal primitives
-  - `lucide-react` — icons
-  - `recharts` — charts (RadialBarChart for compliance score ring)
-  - `framer-motion` — animations
-  - `class-variance-authority` + `clsx` + `tailwind-merge` — className utilities
+### Technical Implementations
+The frontend is built with **Next.js 16.2.4 App Router** and **React 19.2.4**, styled using **Tailwind 4**. The backend implements **API routes** under `app/api/` and integrates with the **Anthropic SDK** using the `claude-opus-4-5` model for AI analysis. A file-based JSON persistence system under `data/certificates/` is used for storing trust certificate records, utilizing URL-safe 12-character IDs and a canonical JSON serializer with SHA-256 hashing for cryptographic attestation. Security measures include anti-forgery tokens for analysis publication, single-use analysis tokens stored on disk, and streaming body-size guards to prevent Denial-of-Service attacks on API endpoints. Hash verification is implemented both server-side and client-side (in-browser) to ensure consistency and transparency.
 
-### Backend / API
-- **Single API route**: `app/api/analyze/route.ts` — calls Anthropic Claude to analyze Solidity contract code against compliance standards
-- The Anthropic SDK (`@anthropic-ai/sdk`) is used server-side only in this route
-- No database, no ORM, no authentication middleware — everything else is mock data
-
-### Data Layer
-- All data lives in `lib/mock-data/` as static TypeScript arrays
-- Types are centrally defined in `lib/types/index.ts`
-- No persistence — refreshing the page resets all state
-
-### AI Chat
-- The Chat page (`/chat`) uses **pre-written canned responses** mapped to specific prompt strings — it does NOT make real API calls
-- The Contract Analyzer (`/analyze`) DOES make real API calls to Anthropic Claude via the `/api/analyze` route
-
-### Mobile Support
-- Responsive layout: Sidebar is hidden on mobile, replaced by a fixed bottom `MobileNav`
-- Breakpoint: `lg` (1024px) — below this, sidebar collapses and MobileNav appears
+### Feature Specifications
+- **Mike — Compliance Copilot:** Streaming chat at `/chat` powered by `app/api/chat/route.ts` (Anthropic `claude-opus-4-5`, `messages.stream`, `text/plain` chunked transfer). System prompt embeds the full workspace as context (15 investors, 8 filings, 3 tokens, last 6 attestation runs from `lib/mock-data/*`) and instructs a former-SEC-attorney persona — direct, no emoji, em dashes ok, lead with the answer + 2–4 evidence bullets + recommended action, max ~180 words, never invent records. Client (`app/(app)/chat/page.tsx`) runs a 3-step prescripted opening sequence (greeting → workspace findings → CTA, 400/1600/2800ms staggered), framer-motion `AnimatePresence` blur+y reveals on every message, animated cursor caret while streaming, suggested-prompts grid that animates in only after the intro completes and disappears once the user sends their first message. Body capped at 32KB, history at last 20 turns, per-message length 4000 chars. Falls back gracefully if the Anthropic call fails (in-bubble error message instead of a broken stream).
+- **AI-native Compliance:** Automates KYC/AML, smart contract attestation, regulatory filings, and investor registry management.
+- **Trust Certificates:** Publicly routable, signed, and embeddable trust certificates for tokenized RWAs. These certificates include a "Scope of Trust" disclosure detailing what is and isn't proven by the attestation.
+- **Contract Analysis:** Utilizes Claude Opus 4.5 for rule-by-rule pass/fail/warning analysis of Solidity contracts against standards like Reg D 506(c), Reg S, MiCA, and ERC-1400.
+- **Persistence:** File-based JSON storage for analysis runs and certificates, ensuring data integrity without a traditional database for rapid iteration.
+- **Security:** Anti-forgery tokens, single-use analysis tokens, and body-size limits on API endpoints (`/api/analyze`, `/api/certificates`) to prevent abuse and DoS attacks.
+- **In-Browser Hash Verification:** Allows users to independently verify the cryptographic hash of a certificate directly in their browser.
+- **Open Graph Image Generation:** Provides shareable previews for trust certificates.
 
 ## External Dependencies
-
-### AI / LLM
-- **Anthropic Claude** (`@anthropic-ai/sdk`) — used in the `/api/analyze` route to power the contract compliance analyzer. Requires `ANTHROPIC_API_KEY` environment variable.
-
-### UI Component Libraries
-- `@radix-ui/react-dialog` — dialog/modal primitives
-- `@radix-ui/react-slot` — slot pattern for composable components
-- `lucide-react` — icon set
-- `recharts` — charting library (radial bar chart for compliance score)
-- `framer-motion` — animation library
-
-### Styling
-- `tailwindcss` v4 with `@tailwindcss/postcss`
-- `class-variance-authority`, `clsx`, `tailwind-merge` — className merging utilities
-
-### Fonts (Google Fonts via next/font)
-- Inter Tight — primary sans-serif
-- JetBrains Mono — monospace for code and labels
-
-### No Database
-There is currently no database. If persistence is needed, a database (e.g., PostgreSQL via Drizzle ORM) would need to be added. All current data is mock data in TypeScript files.
-
-### No Authentication
-There is a login page UI but no real auth system. Adding authentication (e.g., NextAuth.js or Clerk) would be a future requirement.
-
-### Environment Variables Required
-- `ANTHROPIC_API_KEY` — Required for the `/api/analyze` contract analysis feature to work
+- **Anthropic SDK:** Integrated for AI model interaction, specifically using the `claude-opus-4-5` model. Requires `ANTHROPIC_API_KEY`.
+- **Next.js:** The primary web framework.
+- **React:** Frontend library.
+- **Tailwind CSS:** For styling.
+- **Radix UI:** For UI primitives (e.g., dialog, slot).
+- **Lucide Icons:** For iconography.
+- **Framer Motion:** For animations.
+- **Recharts:** For data visualization.

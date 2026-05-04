@@ -1,0 +1,17 @@
+{
+  "node": {
+    "407f8f7001609317ee75f834a11909552be0e7ef36": {
+      "workers": {
+        "app/(app)/analyze/page": {
+          "moduleId": 16383,
+          "async": false,
+          "exportedName": "saveAnalysisAsCertificate",
+          "filename": "app/(app)/analyze/actions.ts"
+        }
+      },
+      "exportedName": "saveAnalysisAsCertificate",
+      "filename": "app/(app)/analyze/actions.ts"
+    }
+  },
+  "edge": {}
+}
