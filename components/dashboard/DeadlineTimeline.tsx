@@ -19,22 +19,22 @@ export function DeadlineTimeline() {
           <div
             key={filing.id}
             className={cn(
-              "flex items-start gap-3 px-4 py-3 hover:bg-[rgba(247,244,237,0.04)] transition-colors",
-              i !== 0 && "border-t border-[var(--rule)]"
+              "flex items-start gap-3 px-4 py-3 hover:bg-slate-800/50 transition-colors",
+              i !== 0 && "border-t border-slate-800/60"
             )}
           >
             <div className={cn(
-              "shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-xs font-semibold",
-              isOverdue ? "bg-[rgba(239,68,68,0.10)] text-[var(--accent-red)]" : isUrgent ? "bg-[rgba(200,132,42,0.10)] text-[var(--accent-amber)]" : "bg-[rgba(247,244,237,0.06)] text-[var(--text-muted)]"
+              "shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-xs font-bold",
+              isOverdue ? "bg-red-500/10 text-red-400" : isUrgent ? "bg-amber-500/10 text-amber-400" : "bg-slate-800 text-slate-400"
             )}>
               {isOverdue ? "!" : `${days}d`}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-medium text-[var(--text-primary)] truncate">{filing.filingType}</p>
-              <p className="text-xs text-[var(--text-tertiary)] truncate">{filing.jurisdiction}</p>
+              <p className="text-xs font-medium text-slate-300 truncate">{filing.filingType}</p>
+              <p className="text-xs text-slate-500 truncate">{filing.jurisdiction}</p>
               <p className={cn(
                 "text-xs mt-0.5",
-                isOverdue ? "text-[var(--accent-red)]" : isUrgent ? "text-[var(--accent-amber)]" : "text-[var(--text-tertiary)]"
+                isOverdue ? "text-red-400" : isUrgent ? "text-amber-400" : "text-slate-600"
               )}>
                 {isOverdue ? `${Math.abs(days)}d overdue` : `Due ${formatDate(filing.dueDate)}`}
               </p>

@@ -29,7 +29,7 @@ export default function DashboardPage() {
         {/* Score + KPIs */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
           <Card className="lg:col-span-2 p-6">
-            <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider mb-4">Compliance Health</p>
+            <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-4">Compliance Health</p>
             <ComplianceScoreRing score={84} />
           </Card>
 
@@ -40,7 +40,7 @@ export default function DashboardPage() {
               icon={Users}
               delta={`${pendingKyc} pending KYC`}
               deltaType="neutral"
-              iconColor="text-[var(--accent-blue)]"
+              iconColor="text-violet-400"
             />
             <KpiCard
               label="Flagged / KYC Issues"
@@ -48,7 +48,7 @@ export default function DashboardPage() {
               icon={AlertTriangle}
               delta={`${flaggedInvestors} flagged`}
               deltaType={flaggedInvestors > 0 ? "negative" : "neutral"}
-              iconColor="text-[var(--accent-amber)]"
+              iconColor="text-amber-400"
               badge={flaggedInvestors > 0 ? <Badge variant="error">Action needed</Badge> : undefined}
             />
             <KpiCard
@@ -57,7 +57,7 @@ export default function DashboardPage() {
               icon={FileText}
               delta={`${overdueFilings} overdue`}
               deltaType={overdueFilings > 0 ? "negative" : "neutral"}
-              iconColor="text-[var(--accent-blue)]"
+              iconColor="text-blue-400"
               badge={overdueFilings > 0 ? <Badge variant="error">{overdueFilings} overdue</Badge> : undefined}
             />
             <KpiCard
@@ -66,7 +66,7 @@ export default function DashboardPage() {
               icon={ShieldCheck}
               delta={failedAttestation > 0 ? `${failedAttestation} failed` : "All current"}
               deltaType={failedAttestation > 0 ? "negative" : "positive"}
-              iconColor="text-[var(--accent-green)]"
+              iconColor="text-emerald-400"
               badge={failedAttestation > 0 ? <Badge variant="error">{failedAttestation} failed</Badge> : undefined}
             />
             <KpiCard
@@ -75,7 +75,7 @@ export default function DashboardPage() {
               icon={Layers}
               delta={`${tokens.length} active tokens`}
               deltaType="positive"
-              iconColor="text-[var(--accent-blue)]"
+              iconColor="text-violet-400"
             />
             <KpiCard
               label="Total Investors"
@@ -83,7 +83,7 @@ export default function DashboardPage() {
               icon={Users}
               delta={`${investors.filter(i => i.entity === "Institutional").length} institutional`}
               deltaType="neutral"
-              iconColor="text-[var(--accent-blue)]"
+              iconColor="text-blue-400"
             />
           </div>
         </div>
@@ -93,50 +93,50 @@ export default function DashboardPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Token Portfolio</CardTitle>
-              <Link href="/tokens" className="text-xs text-[var(--accent-blue)] hover:text-[var(--accent-blue)] transition-colors">View all</Link>
+              <Link href="/tokens" className="text-xs text-violet-400 hover:text-violet-300 transition-colors">View all</Link>
             </div>
           </CardHeader>
           <CardContent className="pt-0 px-0 pb-0">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[600px]">
                 <thead>
-                  <tr className="border-t border-[var(--rule)]">
-                    <th className="text-left px-6 py-3 text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-wider">Token</th>
-                    <th className="text-left px-6 py-3 text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-wider">Jurisdiction</th>
-                    <th className="text-left px-6 py-3 text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-wider">Raise</th>
-                    <th className="text-left px-6 py-3 text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-wider">Investors</th>
-                    <th className="text-left px-6 py-3 text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-wider">Compliance</th>
-                    <th className="text-left px-6 py-3 text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-wider">Attestation</th>
+                  <tr className="border-t border-slate-800">
+                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Token</th>
+                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Jurisdiction</th>
+                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Raise</th>
+                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Investors</th>
+                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Compliance</th>
+                    <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Attestation</th>
                   </tr>
                 </thead>
                 <tbody>
                   {tokens.map((token, i) => (
-                    <tr key={token.id} className={`border-t border-[var(--rule)] hover:bg-[rgba(247,244,237,0.06)]/30 transition-colors ${i === tokens.length - 1 ? "rounded-b-xl" : ""}`}>
+                    <tr key={token.id} className={`border-t border-slate-800 hover:bg-slate-800/30 transition-colors ${i === tokens.length - 1 ? "rounded-b-xl" : ""}`}>
                       <td className="px-6 py-4">
-                        <p className="text-sm font-medium text-[var(--text-primary)]">{token.name}</p>
-                        <p className="text-xs text-[var(--text-tertiary)] mt-0.5">{token.standard} · {token.network}</p>
+                        <p className="text-sm font-medium text-slate-200">{token.name}</p>
+                        <p className="text-xs text-slate-500 mt-0.5">{token.standard} · {token.network}</p>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-sm text-[var(--text-primary)]">{token.jurisdiction}</p>
+                        <p className="text-sm text-slate-300">{token.jurisdiction}</p>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-sm text-[var(--text-primary)]">{formatCurrency(token.totalRaise)}</p>
+                        <p className="text-sm text-slate-300">{formatCurrency(token.totalRaise)}</p>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-sm text-[var(--text-primary)]">{token.currentInvestors}/{token.maxInvestors}</p>
+                        <p className="text-sm text-slate-300">{token.currentInvestors}/{token.maxInvestors}</p>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <div className="flex-1 max-w-16 h-1.5 bg-[rgba(247,244,237,0.06)] rounded-full overflow-hidden">
+                          <div className="flex-1 max-w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden">
                             <div
                               className="h-full rounded-full"
                               style={{
                                 width: `${token.complianceScore}%`,
-                                background: token.complianceScore >= 80 ? "#4ADE80" : token.complianceScore >= 60 ? "#C8842A" : "#EF4444"
+                                background: token.complianceScore >= 80 ? "#10b981" : token.complianceScore >= 60 ? "#f59e0b" : "#ef4444"
                               }}
                             />
                           </div>
-                          <span className="text-xs text-[var(--text-muted)]">{token.complianceScore}</span>
+                          <span className="text-xs text-slate-400">{token.complianceScore}</span>
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -171,7 +171,7 @@ export default function DashboardPage() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Upcoming Deadlines</CardTitle>
-                <Link href="/filings" className="text-xs text-[var(--accent-blue)] hover:text-[var(--accent-blue)] transition-colors">View all</Link>
+                <Link href="/filings" className="text-xs text-violet-400 hover:text-violet-300 transition-colors">View all</Link>
               </div>
             </CardHeader>
             <CardContent className="pt-0 px-0 pb-0">

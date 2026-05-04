@@ -8,7 +8,7 @@ function DudiligLogo() {
         <path d="M12 2L21 7V12C21 16.97 17.84 21.43 13.34 22.82C12.46 23.06 11.54 23.06 10.66 22.82C6.16 21.43 3 16.97 3 12V7L12 2Z" stroke="var(--text-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M9 12L11 14L15 10" stroke="var(--accent-blue)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-      <span style={{ fontFamily: "var(--font-mono)", fontSize: "15px", fontWeight: 500, letterSpacing: "-0.01em", color: "var(--text-primary)" }}>Dudilig</span>
+      <span style={{ fontFamily: "var(--font-jetbrains-mono, monospace)", fontSize: "14px", fontWeight: 500, color: "var(--text-primary)" }}>Dudilig</span>
     </Link>
   )
 }

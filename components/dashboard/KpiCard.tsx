@@ -12,28 +12,28 @@ interface KpiCardProps {
   badge?: React.ReactNode
 }
 
-export function KpiCard({ label, value, icon: Icon, delta, deltaType = "neutral", iconColor = "text-[var(--accent-blue)]", badge }: KpiCardProps) {
+export function KpiCard({ label, value, icon: Icon, delta, deltaType = "neutral", iconColor = "text-violet-400", badge }: KpiCardProps) {
   return (
     <Card className="p-5">
       <div className="flex items-start justify-between">
         <div className="space-y-3">
-          <p className="text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-wider">{label}</p>
+          <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{label}</p>
           <div className="flex items-end gap-2">
-            <p className="text-2xl font-semibold text-[var(--text-primary)]">{value}</p>
+            <p className="text-2xl font-bold text-slate-50">{value}</p>
             {badge}
           </div>
           {delta && (
             <p className={cn(
               "text-xs",
-              deltaType === "positive" && "text-[var(--accent-green)]",
-              deltaType === "negative" && "text-[var(--accent-red)]",
-              deltaType === "neutral" && "text-[var(--text-tertiary)]",
+              deltaType === "positive" && "text-emerald-400",
+              deltaType === "negative" && "text-red-400",
+              deltaType === "neutral" && "text-slate-500",
             )}>
               {delta}
             </p>
           )}
         </div>
-        <div className={cn("p-2.5 bg-[rgba(247,244,237,0.06)] rounded-lg", iconColor)}>
+        <div className={cn("p-2.5 bg-slate-800 rounded-lg", iconColor)}>
           <Icon className="w-4 h-4" />
         </div>
       </div>

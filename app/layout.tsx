@@ -15,13 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.RENDER_EXTERNAL_URL ? process.env.RENDER_EXTERNAL_URL : null) ??
-  "https://dudilig.com";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
   title: "Dudilig — Compliance OS",
   description: "The compliance operating system for tokenized real-world assets",
 };
@@ -34,10 +28,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        suppressHydrationWarning
         className={`${interTight.variable} ${jetbrainsMono.variable} antialiased`}
         style={{
-          fontFamily: "var(--font-sans)",
+          fontFamily: "var(--font-inter-tight), 'Inter Tight', system-ui, sans-serif",
           background: "var(--bg-base)",
           color: "var(--text-primary)",
         }}
