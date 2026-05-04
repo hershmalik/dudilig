@@ -16,7 +16,7 @@ export function ComplianceScoreRing({ score }: ComplianceScoreRingProps) {
   const label = score >= 80 ? "Strong" : score >= 60 ? "Moderate" : "At Risk"
 
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
       <div className="relative w-28 h-28" style={{ minWidth: 112, minHeight: 112 }}>
         <ResponsiveContainer width={112} height={112}>
           <RadialBarChart

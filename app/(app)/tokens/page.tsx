@@ -26,10 +26,10 @@ export default function TokensPage() {
         subtitle={`${tokens.length} active tokens · ${formatCurrency(tokens.reduce((s, t) => s + t.totalRaise, 0))} total AUM`}
       />
 
-      <div className="p-8 space-y-4">
+      <div className="p-4 sm:p-8 space-y-4">
         {tokens.map(token => (
-          <Card key={token.id} className="p-6">
-            <div className="flex items-start gap-6">
+          <Card key={token.id} className="p-4 sm:p-6">
+            <div className="flex flex-col lg:flex-row items-start gap-6">
               {/* Left: meta */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-2">
@@ -51,7 +51,7 @@ export default function TokensPage() {
                   </a>
                 </div>
 
-                <div className="grid grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                   <div>
                     <p className="text-xs text-slate-500 mb-1">Total Raise</p>
                     <p className="text-sm font-semibold text-slate-200">{formatCurrency(token.totalRaise)}</p>
@@ -79,7 +79,7 @@ export default function TokensPage() {
               </div>
 
               {/* Right: status panel */}
-              <div className="shrink-0 w-56 space-y-4">
+              <div className="w-full lg:w-56 lg:shrink-0 space-y-4">
                 {/* Compliance score */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
