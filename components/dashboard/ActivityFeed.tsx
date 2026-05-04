@@ -11,10 +11,10 @@ const severityIcon = {
 }
 
 const severityColor = {
-  success: "text-emerald-400",
-  warning: "text-amber-400",
-  error: "text-red-400",
-  info: "text-violet-400",
+  success: "text-[var(--accent-green)]",
+  warning: "text-[var(--accent-amber)]",
+  error: "text-[var(--accent-red)]",
+  info: "text-[var(--accent-blue)]",
 }
 
 export function ActivityFeed() {
@@ -26,14 +26,14 @@ export function ActivityFeed() {
           <div
             key={event.id}
             className={cn(
-              "flex gap-3 px-4 py-3 hover:bg-slate-800/50 transition-colors",
-              i !== 0 && "border-t border-slate-800/60"
+              "flex gap-3 px-4 py-3 hover:bg-[rgba(247,244,237,0.04)] transition-colors",
+              i !== 0 && "border-t border-[var(--rule)]"
             )}
           >
             <Icon className={cn("w-4 h-4 mt-0.5 shrink-0", severityColor[event.severity])} />
             <div className="min-w-0 flex-1">
-              <p className="text-xs text-slate-300 leading-relaxed">{event.message}</p>
-              <p className="text-xs text-slate-600 mt-0.5">{timeAgo(event.timestamp)}</p>
+              <p className="text-xs text-[var(--text-primary)] leading-relaxed">{event.message}</p>
+              <p className="text-xs text-[var(--text-tertiary)] mt-0.5">{timeAgo(event.timestamp)}</p>
             </div>
           </div>
         )

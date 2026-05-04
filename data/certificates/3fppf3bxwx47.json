@@ -1,0 +1,79 @@
+{
+  "id": "3fppf3bxwx47",
+  "issuerName": "Gulf Sovereign Holdings",
+  "tokenName": "Gulf Real Estate Income Trust",
+  "standard": "reg-d-506c",
+  "standardName": "Reg D 506(c)",
+  "contractAddress": "0x3d8e9f0a1b2c4d5e6f7a8b9c0d1e2f3a4b5c6d7e",
+  "network": "Polygon",
+  "claimedFacts": {
+    "maxInvestors": 250,
+    "transferLockupMonths": 36,
+    "accreditedOnly": true,
+    "jurisdictionWhitelist": [
+      "AE",
+      "KY",
+      "BVI"
+    ]
+  },
+  "contractCode": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\nimport \"@openzeppelin/contracts/token/ERC20/ERC20.sol\";\nimport \"@openzeppelin/contracts/access/Ownable.sol\";\n\n/**\n * GulfRealEstateIncomeTrust — claims to be Reg D 506(c) with a 250 investor\n * cap and accredited-only enforcement. The deployed bytecode below shows\n * MAX_INVESTORS = 500 and accreditation enforcement is missing on transfer.\n */\ncontract GulfRealEstateIncomeTrust is ERC20, Ownable {\n    // Issuer claims 250 in the offering documents; on-chain says 500.\n    uint256 public constant MAX_INVESTORS  = 500;\n    uint256 public constant TRANSFER_LOCKUP = 1095 days;\n\n    mapping(address => bool)    public accredited;\n    mapping(address => uint256) public mintTimestamp;\n    uint256 public investorCount;\n\n    constructor() ERC20(\"Gulf Real Estate Income Trust\", \"GREIT\") Ownable(msg.sender) {}\n\n    function setAccredited(address investor, bool status) external onlyOwner {\n        accredited[investor] = status;\n    }\n\n    function mint(address to, uint256 amount) external onlyOwner {\n        require(accredited[to], \"GREIT: not accredited\");\n        if (balanceOf(to) == 0) {\n            require(investorCount < MAX_INVESTORS, \"GREIT: investor cap reached\");\n            investorCount++;\n        }\n        mintTimestamp[to] = block.timestamp;\n        _mint(to, amount);\n    }\n\n    /// Transfers do not re-check accreditation of the recipient.\n    function _update(address from, address to, uint256 value) internal override {\n        if (from != address(0) && to != address(0)) {\n            require(\n                block.timestamp >= mintTimestamp[from] + TRANSFER_LOCKUP,\n                \"GREIT: lockup not expired\"\n            );\n        }\n        super._update(from, to, value);\n    }\n}",
+  "analysis": {
+    "summary": "This contract has critical Reg D 506(c) compliance failures. The _update function does not verify accreditation status on transfers, allowing tokens to flow to non-accredited investors. Additionally, the on-chain MAX_INVESTORS of 500 contradicts claimed documentation of 250, and there is no mechanism for verifying accreditation proof versus simple owner attestation.",
+    "overallStatus": "fail",
+    "score": 32,
+    "results": [
+      {
+        "rule": "Investor cap enforcement (max 2,000 or fewer investors for certain exemptions)",
+        "status": "warning",
+        "finding": "Contract enforces MAX_INVESTORS = 500 in mint() function, but comment indicates offering documents claim 250 investors. This discrepancy between on-chain enforcement and legal documentation creates compliance risk. The cap check also fails to decrement investorCount when investors fully exit positions.",
+        "line": "MAX_INVESTORS, mint()"
+      },
+      {
+        "rule": "Accredited investor verification — must require proof, not just self-certification",
+        "status": "fail",
+        "finding": "setAccredited() relies solely on owner attestation with no on-chain proof mechanism, oracle integration, or third-party verification service. Reg D 506(c) requires issuers to take reasonable steps to verify accredited status, which simple boolean flags cannot demonstrate.",
+        "line": "setAccredited()"
+      },
+      {
+        "rule": "Transfer restrictions — resale prohibited without registration or another exemption",
+        "status": "fail",
+        "finding": "The _update() function only checks lockup period expiration but does NOT verify that the recipient (to) is accredited. After lockup expires, tokens can transfer to any address regardless of accreditation status, violating resale restrictions.",
+        "line": "_update()"
+      },
+      {
+        "rule": "No general solicitation beyond verified accredited investors",
+        "status": "na",
+        "finding": "General solicitation is an off-chain marketing/distribution concern that cannot be enforced at the smart contract level. This rule requires legal and operational controls outside the contract scope.",
+        "line": null
+      },
+      {
+        "rule": "Lockup period enforcement (if any)",
+        "status": "pass",
+        "finding": "Contract enforces TRANSFER_LOCKUP of 1095 days (3 years) via _update() function, blocking transfers until block.timestamp >= mintTimestamp[from] + TRANSFER_LOCKUP. This exceeds typical Reg D holding periods.",
+        "line": "TRANSFER_LOCKUP, _update()"
+      },
+      {
+        "rule": "US jurisdiction whitelist/blacklist logic",
+        "status": "fail",
+        "finding": "Contract contains no jurisdiction checking, geographic restrictions, or whitelist/blacklist mechanism for US persons or excluded jurisdictions. Reg D offerings require geographic compliance controls.",
+        "line": null
+      }
+    ],
+    "criticalIssues": [
+      "Transfers bypass accreditation check: _update() allows tokens to flow to non-accredited recipients after lockup, directly violating securities transfer restrictions",
+      "No proof-of-accreditation mechanism: setAccredited() is a simple boolean with no verification trail, insufficient for 506(c) 'reasonable steps' requirement",
+      "Investor cap discrepancy: On-chain MAX_INVESTORS (500) contradicts claimed documentation (250), creating legal/audit inconsistency",
+      "Missing recipient accreditation in _update(): Contract explicitly notes 'Transfers do not re-check accreditation of the recipient' which is a known design flaw"
+    ],
+    "recommendations": [
+      "Add accreditation check in _update(): require(accredited[to], 'GREIT: recipient not accredited') for all non-mint transfers",
+      "Implement investorCount decrement when an investor's balance reaches zero to maintain accurate count",
+      "Integrate third-party accreditation oracle or store verification proof hashes (e.g., verificationHash mapping with timestamps)",
+      "Align MAX_INVESTORS constant with offering document terms or add configurable setter with appropriate access controls",
+      "Add jurisdiction whitelist mapping and check in both mint() and _update() functions",
+      "Consider adding transfer approval mechanism requiring issuer sign-off for secondary transfers"
+    ]
+  },
+  "hash": "sha256:4935a61876f37e470a2963be7fa3531d0258b9e6105c69c689f315f5dd936b01",
+  "createdAt": "2026-05-02T20:11:49.715Z"
+}

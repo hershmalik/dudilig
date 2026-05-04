@@ -29,7 +29,6 @@ export function MobileNav() {
         background: "var(--bg-elevated)",
         borderTop: "1px solid var(--rule)",
         backdropFilter: "blur(12px)",
-        paddingBottom: "env(safe-area-inset-bottom)",
       }}
     >
       {navItems.map(({ href, label, icon: Icon }) => {
@@ -38,7 +37,7 @@ export function MobileNav() {
           <Link
             key={href}
             href={href}
-            className="flex-1 flex flex-col items-center justify-center py-3 gap-1 text-[10px] font-medium transition-colors min-h-[56px]"
+            className="flex-1 flex flex-col items-center justify-center py-3 gap-1 text-[10px] font-medium transition-colors"
             style={{
               color: active ? "var(--accent-blue)" : "var(--text-tertiary)",
               fontFamily: "var(--font-mono)",

@@ -15,39 +15,39 @@ function AttestationExplainer() {
   const steps = [
     {
       icon: FileText,
-      color: "text-blue-400",
-      bg: "bg-blue-500/10 border-blue-500/20",
+      color: "text-[var(--accent-blue)]",
+      bg: "bg-[rgba(59,130,246,0.10)] border-[rgba(59,130,246,0.20)]",
       title: "Legal Document",
       description: "Fund manager files offering docs stating rules: \"max 250 investors, accredited only, 12-month lockup.\"",
     },
     {
       icon: Code2,
-      color: "text-violet-400",
-      bg: "bg-violet-500/10 border-violet-500/20",
+      color: "text-[var(--accent-blue)]",
+      bg: "bg-[rgba(59,130,246,0.10)] border-[rgba(59,130,246,0.20)]",
       title: "Smart Contract",
       description: "A separate piece of code is deployed on-chain. It may — or may not — actually enforce those rules.",
     },
     {
       icon: ShieldCheck,
-      color: "text-emerald-400",
-      bg: "bg-emerald-500/10 border-emerald-500/20",
+      color: "text-[var(--accent-green)]",
+      bg: "bg-[rgba(74,222,128,0.10)] border-[rgba(74,222,128,0.20)]",
       title: "Attestation Engine",
       description: "Dudilig reads the contract code directly and checks every claim. Produces a cryptographic proof of the result.",
     },
     {
       icon: Share2,
-      color: "text-amber-400",
-      bg: "bg-amber-500/10 border-amber-500/20",
-      title: "Issuer Passport",
-      description: "A shareable public passport any LP, regulator, or liquidity provider can verify — no code-reading required.",
+      color: "text-[var(--accent-amber)]",
+      bg: "bg-[rgba(200,132,42,0.10)] border-[rgba(200,132,42,0.20)]",
+      title: "Trust Certificate",
+      description: "A shareable public certificate any LP, regulator, or liquidity provider can verify — no code-reading required.",
     },
   ]
 
   return (
-    <div className="mx-4 sm:mx-8 mt-6 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-      <div className="px-6 py-5 border-b border-slate-800">
-        <p className="text-sm font-semibold text-slate-200">How the attestation engine works</p>
-        <p className="text-xs text-slate-500 mt-1">The problem it solves, in plain English</p>
+    <div className="mx-4 sm:mx-8 mt-6 bg-[var(--bg-elevated)] border border-[var(--rule)] rounded-2xl overflow-hidden">
+      <div className="px-6 py-5 border-b border-[var(--rule)]">
+        <p className="text-sm font-semibold text-[var(--text-primary)]">How the attestation engine works</p>
+        <p className="text-xs text-[var(--text-tertiary)] mt-1">The problem it solves, in plain English</p>
       </div>
 
       {/* Flow diagram */}
@@ -62,10 +62,10 @@ function AttestationExplainer() {
                     <Icon className={`w-4 h-4 ${step.color}`} />
                     <p className={`text-xs font-semibold ${step.color}`}>{step.title}</p>
                   </div>
-                  <p className="text-xs text-slate-400 leading-relaxed">{step.description}</p>
+                  <p className="text-xs text-[var(--text-muted)] leading-relaxed">{step.description}</p>
                 </div>
                 {i < steps.length - 1 && (
-                  <ArrowRight className="w-4 h-4 text-slate-700 shrink-0 mt-1 sm:hidden rotate-90" />
+                  <ArrowRight className="w-4 h-4 text-[var(--text-tertiary)] shrink-0 mt-1 sm:hidden rotate-90" />
                 )}
               </div>
             )
@@ -75,20 +75,20 @@ function AttestationExplainer() {
 
       {/* Plain language explainer */}
       <div className="px-6 pb-6">
-        <div className="bg-slate-800/50 rounded-xl p-5 border border-slate-700">
-          <p className="text-xs font-semibold text-slate-300 mb-2">Real example</p>
-          <p className="text-xs text-slate-400 leading-relaxed">
-            A Singapore-based tokenized private credit fund launches a Reg S offering for non-US investors only. Their lawyer filed the right documents. But does the smart contract actually block US wallet addresses? Dudilig reads the contract, verifies the geo-blocking and accreditation logic is correctly implemented, and issues a signed Issuer Passport. That passport is what gets Wintermute or Galaxy Digital comfortable enough to provide liquidity — without it, they won't touch it.
+        <div className="bg-[rgba(247,244,237,0.04)] rounded-xl p-5 border border-[var(--rule-strong)]">
+          <p className="text-xs font-semibold text-[var(--text-primary)] mb-2">Real example</p>
+          <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+            A Singapore-based tokenized private credit fund launches a Reg S offering for non-US investors only. Their lawyer filed the right documents. But does the smart contract actually block US wallet addresses? Dudilig reads the contract, verifies the geo-blocking and accreditation logic is correctly implemented, and issues a signed attestation certificate. That certificate is what gets Wintermute or Galaxy Digital comfortable enough to provide liquidity — without it, they won't touch it.
           </p>
         </div>
       </div>
 
       {/* The key insight */}
       <div className="px-6 pb-6">
-        <div className="flex items-start gap-3 bg-red-500/5 border border-red-500/15 rounded-xl p-4">
-          <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-          <p className="text-xs text-slate-400 leading-relaxed">
-            <span className="text-red-400 font-medium">The gap nobody talks about:</span> Legal documents and smart contracts are two completely separate things. The contract could say one thing and do another — and nobody would know until something goes wrong in a trade or an audit. Toggle "Simulate mismatch" below to see what that looks like.
+        <div className="flex items-start gap-3 bg-[var(--accent-red)]/5 border border-[rgba(239,68,68,0.15)] rounded-xl p-4">
+          <AlertTriangle className="w-4 h-4 text-[var(--accent-red)] shrink-0 mt-0.5" />
+          <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+            <span className="text-[var(--accent-red)] font-medium">The gap nobody talks about:</span> Legal documents and smart contracts are two completely separate things. The contract could say one thing and do another — and nobody would know until something goes wrong in a trade or an audit. Toggle "Simulate mismatch" below to see what that looks like.
           </p>
         </div>
       </div>
@@ -106,10 +106,10 @@ export default function AttestationPage() {
         subtitle="Cryptographically verify on-chain contracts match off-chain compliance claims"
         action={
           <div className="flex items-center gap-2.5">
-            <span className="text-xs text-slate-500">Simulate mismatch</span>
+            <span className="text-xs text-[var(--text-tertiary)]">Simulate mismatch</span>
             <button
               onClick={() => setFailMode(!failMode)}
-              className={`relative w-10 h-5 rounded-full transition-colors ${failMode ? "bg-red-600" : "bg-slate-700"}`}
+              className={`relative w-10 h-5 rounded-full transition-colors ${failMode ? "bg-[var(--accent-red)]" : "bg-[rgba(247,244,237,0.08)]"}`}
             >
               <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${failMode ? "translate-x-5" : "translate-x-0.5"}`} />
             </button>
@@ -120,9 +120,9 @@ export default function AttestationPage() {
       <AttestationExplainer />
 
       {failMode && (
-        <div className="mx-8 mt-4 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 flex items-center gap-3">
-          <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
-          <p className="text-xs text-red-300">
+        <div className="mx-8 mt-4 bg-[rgba(239,68,68,0.10)] border border-[rgba(239,68,68,0.20)] rounded-xl px-4 py-3 flex items-center gap-3">
+          <AlertTriangle className="w-4 h-4 text-[var(--accent-red)] shrink-0" />
+          <p className="text-xs text-[var(--accent-red)]">
             Demo mode: simulating a contract where <span className="font-mono">MAX_INVESTORS = 500</span> but the offering documents claim <span className="font-mono">250</span>. Watch the attestation catch it.
           </p>
         </div>
@@ -136,11 +136,11 @@ export default function AttestationPage() {
               key={token.id}
               className={`flex-1 px-4 py-3 rounded-xl border text-left transition-colors ${
                 token.id === "tok-001"
-                  ? "border-violet-600/40 bg-violet-600/5"
-                  : "border-slate-800 bg-slate-900 hover:border-slate-700"
+                  ? "border-[rgba(59,130,246,0.40)] bg-[rgba(59,130,246,0.05)]"
+                  : "border-[var(--rule)] bg-[var(--bg-elevated)] hover:border-[var(--rule-strong)]"
               }`}
             >
-              <p className="text-xs font-medium text-slate-300 truncate">{token.name}</p>
+              <p className="text-xs font-medium text-[var(--text-primary)] truncate">{token.name}</p>
               <div className="flex items-center gap-1.5 mt-1">
                 <Badge
                   variant={
@@ -150,7 +150,7 @@ export default function AttestationPage() {
                 >
                   {token.attestationStatus}
                 </Badge>
-                <span className="text-xs text-slate-600">{token.standard}</span>
+                <span className="text-xs text-[var(--text-tertiary)]">{token.standard}</span>
               </div>
             </button>
           ))}
@@ -165,55 +165,55 @@ export default function AttestationPage() {
 
           {/* Right: Engine */}
           <Card className="p-6">
-            <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-4">Attestation Engine</p>
+            <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider mb-4">Attestation Engine</p>
             <AttestationEngine failMode={failMode} />
           </Card>
         </div>
 
         {/* History */}
         <Card>
-          <div className="px-6 py-4 border-b border-slate-800">
-            <p className="text-sm font-medium text-slate-200">Attestation History</p>
+          <div className="px-6 py-4 border-b border-[var(--rule)]">
+            <p className="text-sm font-medium text-[var(--text-primary)]">Attestation History</p>
           </div>
           <div className="overflow-x-auto">
           <table className="w-full min-w-[500px]">
             <thead>
-              <tr className="border-b border-slate-800">
-                <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Token</th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Run At</th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Result</th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Fields Checked</th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider">Hash</th>
+              <tr className="border-b border-[var(--rule)]">
+                <th className="text-left px-6 py-3 text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-wider">Token</th>
+                <th className="text-left px-6 py-3 text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-wider">Run At</th>
+                <th className="text-left px-6 py-3 text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-wider">Result</th>
+                <th className="text-left px-6 py-3 text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-wider">Fields Checked</th>
+                <th className="text-left px-6 py-3 text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-wider">Hash</th>
               </tr>
             </thead>
             <tbody>
               {attestationHistory.map((run, i) => (
-                <tr key={run.id} className={`border-t border-slate-800 hover:bg-slate-800/30 transition-colors ${i === 0 ? "border-t-0" : ""}`}>
+                <tr key={run.id} className={`border-t border-[var(--rule)] hover:bg-[rgba(247,244,237,0.06)]/30 transition-colors ${i === 0 ? "border-t-0" : ""}`}>
                   <td className="px-6 py-4">
-                    <p className="text-sm text-slate-300">{run.tokenName}</p>
+                    <p className="text-sm text-[var(--text-primary)]">{run.tokenName}</p>
                   </td>
-                  <td className="px-6 py-4 text-xs text-slate-400">{timeAgo(run.runAt)}</td>
+                  <td className="px-6 py-4 text-xs text-[var(--text-muted)]">{timeAgo(run.runAt)}</td>
                   <td className="px-6 py-4">
                     {run.status === "pass" ? (
-                      <span className="flex items-center gap-1.5 text-xs text-emerald-400">
+                      <span className="flex items-center gap-1.5 text-xs text-[var(--accent-green)]">
                         <CheckCircle2 className="w-3.5 h-3.5" /> Passed
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1.5 text-xs text-red-400">
+                      <span className="flex items-center gap-1.5 text-xs text-[var(--accent-red)]">
                         <XCircle className="w-3.5 h-3.5" /> Failed
                       </span>
                     )}
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-xs text-slate-400">{run.checkedFields.length} fields</span>
+                    <span className="text-xs text-[var(--text-muted)]">{run.checkedFields.length} fields</span>
                     {run.checkedFields.some(f => !f.match) && (
-                      <span className="ml-2 text-xs text-red-400">
+                      <span className="ml-2 text-xs text-[var(--accent-red)]">
                         {run.checkedFields.filter(f => !f.match).length} mismatch
                       </span>
                     )}
                   </td>
                   <td className="px-6 py-4">
-                    <p className="text-xs font-mono text-slate-600 truncate max-w-32">{run.hash.slice(0, 16)}...</p>
+                    <p className="text-xs font-mono text-[var(--text-tertiary)] truncate max-w-32">{run.hash.slice(0, 16)}...</p>
                   </td>
                 </tr>
               ))}
