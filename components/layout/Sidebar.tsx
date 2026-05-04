@@ -24,7 +24,7 @@ const navItems = [
   { href: "/filings",   label: "Filings",            icon: FileText },
   { href: "/tokens",    label: "Tokens",             icon: Layers },
   { href: "/chat",      label: "Compliance AI",       icon: MessageSquare },
-  { href: "/certificate", label: "Trust Certificate", icon: Award },
+  { href: "/passport", label: "Issuer Passport", icon: Award },
 ]
 
 const TOTAL_CREDITS = 5000

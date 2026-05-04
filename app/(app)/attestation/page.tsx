@@ -38,7 +38,7 @@ function AttestationExplainer() {
       icon: Share2,
       color: "text-amber-400",
       bg: "bg-amber-500/10 border-amber-500/20",
-      title: "Trust Certificate",
+      title: "Issuer Passport",
       description: "A shareable public certificate any LP, regulator, or liquidity provider can verify — no code-reading required.",
     },
   ]

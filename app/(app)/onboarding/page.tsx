@@ -278,8 +278,8 @@ export default function OnboardingPage() {
               </div>
 
               <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-                <p className="text-xs text-slate-500 mb-1">Your Trust Certificate URL</p>
-                <p className="text-xs font-mono text-violet-300">dudilig.io/certificate/meridian-pcf-i</p>
+                <p className="text-xs text-slate-500 mb-1">Your Issuer Passport URL</p>
+                <p className="text-xs font-mono text-violet-300">dudilig.io/passport/meridian-pcf-i</p>
                 <p className="text-xs text-slate-600 mt-1">Share this with LPs and liquidity providers for instant verification.</p>
               </div>
             </div>
