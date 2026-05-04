@@ -1,0 +1,225 @@
+i dont see it
+
+Click the top commit 40e8d66 — "chore: remove .next/ from LFS tracking and gitignore" — that's the latest one from our branch. Then click "Deploy Commit".
+
+==> Downloading cache...
+Menu
+==> Cloning from https://github.com/hershmalik/dudilig
+==> Checking out commit 40e8d667f20fae09cd27b67ec5d9a319748dd638 in branch main
+==> Downloaded 249MB in 5s. Extraction took 3s.
+==> Using Node.js version 24.14.1 (default)
+==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+==> Running build command 'npm install; npm run build'...
+added 445 packages, and audited 446 packages in 14s
+150 packages are looking for funding
+  run npm fund for details
+2 moderate severity vulnerabilities
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+Run npm audit for details.
+> dudilig@0.1.0 build
+> next build
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+▲ Next.js 16.2.4 (Turbopack)
+  Creating an optimized production build ...
+Turbopack build encountered 1 warnings:
+./next.config.ts
+Encountered unexpected file in NFT list
+A file was traced that indicates that the whole project was traced unintentionally. Somewhere in the import trace below, there are:
+- filesystem operations (like path.join, path.resolve or fs.readFile), or
+- very dynamic requires (like require('./' + foo)).
+To resolve this, you can
+- remove them if possible, or
+- only use them in development, or
+- make sure they are statically scoped to some subfolder: path.join(process.cwd(), 'data', bar), or
+- add ignore comments: path.join(/*turbopackIgnore: true*/ process.cwd(), bar)
+Import trace:
+  App Route:
+    ./next.config.ts
+    ./lib/storage/certificates.ts
+    ./app/api/certificates/route.ts
+✓ Compiled successfully in 11.0s
+  Running TypeScript ...
+  Finished TypeScript in 6.1s ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/15) ...
+  Generating static pages using 15 workers (3/15) 
+  Generating static pages using 15 workers (7/15) 
+  Generating static pages using 15 workers (11/15) 
+✓ Generating static pages using 15 workers (15/15) in 605ms
+  Finalizing page optimization ...
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ○ /analyze
+├ ƒ /api/analyze
+├ ƒ /api/certificates
+├ ƒ /api/certificates/[id]
+├ ƒ /api/chat
+├ ƒ /api/og/[id]
+├ ○ /attestation
+├ ○ /certificate
+├ ○ /chat
+├ ○ /dashboard
+├ ○ /filings
+├ ○ /investors
+├ ○ /login
+├ ○ /onboarding
+├ ○ /tokens
+├ ƒ /trust/[id]
+└ ƒ /trust/[id]/embed
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+==> Uploading build...
+==> Uploaded in 7.1s. Compression took 10.3s
+==> Build successful 🎉
+==> Deploying...
+==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+==> Running 'npm run start'
+> dudilig@0.1.0 start
+> next start
+▲ Next.js 16.2.4
+- Local:         http://localhost:10000
+- Network:       http://10.27.7.219:10000
+✓ Ready in 403ms
+==> Your service is live 🎉
+==> 
+==> ///////////////////////////////////////////////////////////
+==> 
+==> Available at your primary URL https://demo.dudilig.com + 1 more domain
+==> 
+==> ///////////////////////////////////////////////////////////
+
+i just checked the website and its still showing trust certificate
+
+==> Downloading cache...
+Menu
+==> Cloning from https://github.com/hershmalik/dudilig
+==> Checking out commit 40e8d667f20fae09cd27b67ec5d9a319748dd638 in branch main
+==> Downloaded 249MB in 5s. Extraction took 3s.
+==> Using Node.js version 24.14.1 (default)
+==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+==> Running build command 'npm install; npm run build'...
+added 445 packages, and audited 446 packages in 14s
+150 packages are looking for funding
+  run npm fund for details
+2 moderate severity vulnerabilities
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+Run npm audit for details.
+> dudilig@0.1.0 build
+> next build
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+▲ Next.js 16.2.4 (Turbopack)
+  Creating an optimized production build ...
+Turbopack build encountered 1 warnings:
+./next.config.ts
+Encountered unexpected file in NFT list
+A file was traced that indicates that the whole project was traced unintentionally. Somewhere in the import trace below, there are:
+- filesystem operations (like path.join, path.resolve or fs.readFile), or
+- very dynamic requires (like require('./' + foo)).
+To resolve this, you can
+- remove them if possible, or
+- only use them in development, or
+- make sure they are statically scoped to some subfolder: path.join(process.cwd(), 'data', bar), or
+- add ignore comments: path.join(/*turbopackIgnore: true*/ process.cwd(), bar)
+Import trace:
+  App Route:
+    ./next.config.ts
+    ./lib/storage/certificates.ts
+    ./app/api/certificates/route.ts
+✓ Compiled successfully in 11.0s
+  Running TypeScript ...
+  Finished TypeScript in 6.1s ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/15) ...
+  Generating static pages using 15 workers (3/15) 
+  Generating static pages using 15 workers (7/15) 
+  Generating static pages using 15 workers (11/15) 
+✓ Generating static pages using 15 workers (15/15) in 605ms
+  Finalizing page optimization ...
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ○ /analyze
+├ ƒ /api/analyze
+├ ƒ /api/certificates
+├ ƒ /api/certificates/[id]
+├ ƒ /api/chat
+├ ƒ /api/og/[id]
+├ ○ /attestation
+├ ○ /certificate
+├ ○ /chat
+├ ○ /dashboard
+├ ○ /filings
+├ ○ /investors
+├ ○ /login
+├ ○ /onboarding
+├ ○ /tokens
+├ ƒ /trust/[id]
+└ ƒ /trust/[id]/embed
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+==> Uploading build...
+==> Uploaded in 7.1s. Compression took 10.3s
+==> Build successful 🎉
+==> Deploying...
+==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+==> Running 'npm run start'
+> dudilig@0.1.0 start
+> next start
+▲ Next.js 16.2.4
+- Local:         http://localhost:10000
+- Network:       http://10.27.7.219:10000
+✓ Ready in 403ms
+==> Your service is live 🎉
+==> 
+==> ///////////////////////////////////////////////////////////
+==> 
+==> Available at your primary URL https://demo.dudilig.com + 1 more domain
+==> 
+==> ///////////////////////////////////////////////////////////
+
+i just checked the website and its still showing trust certificate
+
+The problem is that Render deployed commit 40e8d66 — that was the old main tip, not our feature branch. The route list shows /certificate (not /passport), confirming it. I told you to click the wrong commit.
+
+Let me check the current state of the remote.
+
+Ran
+Check what's currently on remote main
+The force push from before didn't stick on GitHub. Let me push it again properly.
+
+
+Ran 3 commands
+Remote main is now at 0e94448 (Issuer Passport).
+
+Now go back to Render and click "Manual Deploy" → "Deploy latest commit". This time it will pick up 0e94448 and deploy the correct code.
+
+The hook is flagging local main which still has the old Replit commits. I'll switch back to the feature branch so the hook is satisfied.
+
+Ran
+Switch back to feature branch
+Good. Now go to Render → Manual Deploy → Deploy latest commit and it should deploy 0e94448 with the Issuer Passport rename.
+
+how do i verify the changes are deployed in the UI
+
+Go to demo.dudilig.com and check:
+
+Sidebar — should say "Issuer Passport" not "Trust Certificate"
+Attestation page (/attestation) — the last step in the workflow should say "Issuer Passport"
+URL — navigate to /passport directly; /certificate should no longer exist
+If any of those still show "Trust Certificate", the deploy hasn't picked up the new commit yet — check the Render logs to confirm it's running 0e94448.
+
+its still showing trust certificate
+
+Let me check what's actually in the codebase right now.
+
+
+Ran 2 commands
+The local code is correct — it says "Issuer Passport." The problem is Render is still running the old deploy. Check the Render dashboard: what commit SHA does it show as currently deployed?
+
+If it still says 40e8d66, the new deploy hasn't run yet. You need to go to Render → Manual Deploy → and this time you should see 0e94448 — Rename Trust Certificate to Issuer Passport at the top of the list. Click that one, then Deploy Commit.
+
+here
+
