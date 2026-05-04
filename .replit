@@ -1,10 +1,4 @@
 modules = ["nodejs-20"]
-
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[deployment]
-deploymentTarget = "autoscale"
-run = ["bash", "-c", "npx next start -H 0.0.0.0 -p $PORT"]
-build = ["npm", "run", "build"]
