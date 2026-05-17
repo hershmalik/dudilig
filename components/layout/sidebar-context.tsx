@@ -5,14 +5,22 @@ import { createContext, useContext, useState, useEffect } from "react"
 interface SidebarCtx {
   collapsed: boolean
   toggle: () => void
+  regMonOpen: boolean
+  setRegMonOpen: (v: boolean) => void
 }
 
-const SidebarContext = createContext<SidebarCtx>({ collapsed: false, toggle: () => {} })
+const SidebarContext = createContext<SidebarCtx>({
+  collapsed: false,
+  toggle: () => {},
+  regMonOpen: false,
+  setRegMonOpen: () => {},
+})
 
 export const useSidebar = () => useContext(SidebarContext)
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false)
+  const [regMonOpen, setRegMonOpen] = useState(false)
 
   useEffect(() => {
     try {
@@ -30,7 +38,7 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <SidebarContext.Provider value={{ collapsed, toggle }}>
+    <SidebarContext.Provider value={{ collapsed, toggle, regMonOpen, setRegMonOpen }}>
       {children}
     </SidebarContext.Provider>
   )

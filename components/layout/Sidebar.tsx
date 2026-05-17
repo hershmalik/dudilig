@@ -15,6 +15,8 @@ import {
   Microscope,
   Zap,
   Sparkles,
+  Bot,
+  Radio,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useSidebar } from "./sidebar-context"
@@ -26,6 +28,7 @@ const navItems = [
   { href: "/analyze",     label: "Contract Analyzer",   icon: Microscope },
   { href: "/filings",     label: "Filings",             icon: FileText },
   { href: "/tokens",      label: "Tokens",              icon: Layers },
+  { href: "/agents",      label: "Agents",              icon: Bot },
   { href: "/passport",    label: "Issuer Passport",     icon: Award },
 ]
 
@@ -70,7 +73,7 @@ function DudiligLogo() {
 
 export function Sidebar() {
   const pathname = usePathname()
-  const { collapsed, toggle } = useSidebar()
+  const { collapsed, toggle, setRegMonOpen } = useSidebar()
 
   return (
     <aside
@@ -115,7 +118,7 @@ export function Sidebar() {
       )}
 
       {/* Nav */}
-      <nav className={cn("flex-1 py-4 space-y-0.5", collapsed ? "px-2" : "px-3")}>
+      <nav className={cn("flex-1 py-4 space-y-0.5 overflow-y-auto", collapsed ? "px-2" : "px-3")}>
         {navItems.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(href + "/")
           return (
@@ -124,7 +127,7 @@ export function Sidebar() {
               href={href}
               title={collapsed ? label : undefined}
               className={cn(
-                "flex items-center gap-3 py-2 rounded-xl text-sm transition-all group",
+                "flex items-center gap-3 py-2 rounded-xl text-sm transition-all",
                 collapsed ? "justify-center px-2" : "px-3"
               )}
               style={{
@@ -144,7 +147,39 @@ export function Sidebar() {
           )
         })}
 
-        {/* Mike — separated with extra space */}
+        {/* Reg Monitoring */}
+        <button
+          onClick={() => setRegMonOpen(true)}
+          title={collapsed ? "Reg Monitoring" : undefined}
+          className={cn(
+            "w-full flex items-center gap-3 py-2 rounded-xl text-sm transition-all",
+            collapsed ? "justify-center px-2" : "px-3"
+          )}
+          style={{
+            background: "transparent",
+            border: "1px solid transparent",
+            color: "var(--text-muted)",
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLButtonElement).style.background = "rgba(247,244,237,0.04)"
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLButtonElement).style.background = "transparent"
+          }}
+        >
+          <Radio className="w-4 h-4 shrink-0" />
+          {!collapsed && (
+            <>
+              <span>Reg Monitoring</span>
+              <span
+                className="ml-auto w-1.5 h-1.5 rounded-full animate-pulse-soft shrink-0"
+                style={{ background: "var(--accent-green)" }}
+              />
+            </>
+          )}
+        </button>
+
+        {/* Mike — separated */}
         <div className="pt-4">
           {(() => {
             const active = pathname === "/chat" || pathname.startsWith("/chat/")
@@ -153,7 +188,7 @@ export function Sidebar() {
                 href="/chat"
                 title={collapsed ? "Mike — Compliance AI" : undefined}
                 className={cn(
-                  "flex items-center gap-3 py-2 rounded-xl text-sm transition-all group relative",
+                  "flex items-center gap-3 py-2 rounded-xl text-sm transition-all",
                   collapsed ? "justify-center px-2" : "px-3"
                 )}
                 style={{
